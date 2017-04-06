@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<meta charset="UTF-8">
+	<meta content="IE=edge" http-equiv="X-UA-Compatible">
+	<meta content="initial-scale=1.0, width=device-width" name="viewport">
+	<link rel="icon" href="">
+
+	<style type="text/css">
+		
+		body{
+			margin: 0;
+			padding: 0;
+			border: 0;
+			font-size: 100%;
+			font: inherit;
+			vertical-align: baseline;
+		}
+
+		a {
+		    color: #065588;
+		    text-decoration: none;
+		}
+
+		a:hover, a:active{
+			text-decoration: underline;
+		}
+
+		#wrapper{
+			background-color: #FFFFFC;
+		}
+
+		#container{
+			width: 50%;
+			margin: 0 auto;
+		}
+
+		#content{
+			padding: 20px;
+			padding-top: 4.5em;
+    		padding-bottom: 9em;
+		}
+
+		#content #articleHeader{
+			margin-bottom: 0;
+		}
+
+		#content #articleHeader-title{
+			padding: 0;
+    		margin: 0;
+		}
+
+		#content h1{
+			line-height: 1.3em;
+    		font-weight: normal;
+    		font-size: 2.875em;
+		}
+
+		#content .separator{
+			position: relative;
+		    margin: 0;
+		    height: 1em;
+		    line-height: 1;
+		    text-align: center;
+		    padding-top: 1.5em;
+    		padding-bottom: 1.5em;
+		}
+
+		#content div:last-child{
+			margin-bottom: -19px !important;
+		}
+
+		#content .setTextColorAsBackgroundColor{
+		    position: absolute;
+		    left: -4em;
+		    top: 50%;
+		    z-index: 10;
+		    width: 100%;
+		    padding-left: 4em;
+		    padding-right: 4em;
+		    height: 0.1em;
+		    margin: 0;
+		    opacity: 0.5;
+		    background: #EAE5D8;
+		    /*background: -webkit-linear-gradient(0, #F3F2EE 1%, #1F0909 50%, #F3F2EE 99%);*/
+		}
+
+		#content img{
+			max-width: 100%;
+			margin: 0 auto;
+			display: block;
+		}
+
+		.image{
+			padding: 16px 0 16px 0;
+		}
+		
+		#content p{
+			margin-bottom: 1.5em;
+			line-height: 25px;
+			/*font-family: Helvetica;*/
+    		letter-spacing: 0.2px;
+    		font-size: 17.5px;
+		}
+
+		@media only screen and (max-width: 767px){
+			#container{
+				width: auto;
+			}
+		}
+
+	</style>
+
+</head>
+<body>
+	<div id="wrapper">
+		<div id="container">
+			<div id="content">
+				<div id="articleHeader">
+					<h1 id="articleHeader-title"></h1>
+					<div id="articleHeader-separator" class="separator">
+						<div class="separatorLine setTextColorAsBackgroundColor"></div>
+					</div>
+				</div>
+				<div>
+					<p>
+						<img id="mainImage" src="" />
+					</p>
+				</div>
+				<div id="mainContent">
+					
+				</div>
+				<div class="separator">
+					<div class="separatorLine setTextColorAsBackgroundColor"></div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>
