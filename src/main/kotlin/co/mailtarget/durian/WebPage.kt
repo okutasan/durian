@@ -1,7 +1,5 @@
 package co.mailtarget.durian
 
-import java.util.*
-
 /**
  *
  * @author masasdani
@@ -9,10 +7,10 @@ import java.util.*
  */
 data class WebPage constructor(var url: String, var title: String) {
     var description: String? = null
-    var keywords: String? = null
     var favicon: String? = null
     var images: List<String> = emptyList()
-    var publishedDate: Date? = null
+    var keywords: List<String> = emptyList()
+    var publishedDate: String? = null
     var content: String? = null
     var contentHtml: String? = null
 }

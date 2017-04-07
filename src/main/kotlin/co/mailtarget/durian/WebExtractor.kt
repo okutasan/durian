@@ -1,7 +1,6 @@
 package co.mailtarget.durian
 
-import co.mailtarget.durian.extractor.ImageExtractor
-import co.mailtarget.durian.extractor.TitleExtractor
+import co.mailtarget.durian.extractor.*
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
 
@@ -11,10 +10,6 @@ import org.jsoup.nodes.Element
  * @since 4/5/17
  */
 class WebExtractor: Connection()  {
-
-    private val META_PUBLISHER = "meta[name~=date$],meta[property~=date$],meta[name~=time$],meta[property~=time$]"
-    private val META_FAVICON = "link[rel~=icon$]"
-    private val META_KEYWORDS =  "meta[name~=keywords]"
 
     var cleaner: DocumentCleaner? = null
     var strategy = Strategy.META
@@ -35,15 +30,17 @@ class WebExtractor: Connection()  {
     }
 
     private fun extractContent(url: String, document: Document): WebPage {
-        val contentElement = extractContentElement(document)
-        val title = TitleExtractor.getTitleFromContent(document, contentElement)
+        val doc = cleaner?.clean(document) ?: document
+        val contentElement = extractContentElement(doc)
+        val title = TitleExtractor.getTitleFromContent(doc, contentElement)
         val webPage = WebPage(url, title)
         return webPage
     }
 
     private fun extractHybrid(url: String, document: Document): WebPage {
-        val contentElement = extractContentElement(document)
-        val title = TitleExtractor.getTitle(document, contentElement)
+        val doc = cleaner?.clean(document) ?: document
+        val contentElement = extractContentElement(doc)
+        val title = TitleExtractor.getTitle(doc, contentElement)
         val webPage = WebPage(url, title)
         return webPage
     }
@@ -51,16 +48,16 @@ class WebExtractor: Connection()  {
     private fun extractMeta(url: String, document: Document): WebPage {
         val title = TitleExtractor.getTitleFromMeta(document)
         val webPage = WebPage(url, title)
+        webPage.favicon = FaviconExtractor.getFavicon(document)
         webPage.images = ArrayList(ImageExtractor.getImagesFromMeta(document))
+        webPage.description = SnippetExtractor.getDescriptionFromMeta(document)
+        webPage.publishedDate = DateExtractor.getDateFromMeta(document)
+        webPage.keywords = KeywordExtractor.getKeywordsFromMeta(document)
         return webPage
     }
 
     private fun extractContentElement(document: Document): Element {
         return document.body()
-    }
-
-    private fun extractFavicon(document: Document) {
-
     }
 
     object Builder {

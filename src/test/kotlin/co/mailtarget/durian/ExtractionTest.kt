@@ -30,7 +30,16 @@ class ExtractionTest {
                 .withCleaner()
                 .build()
         val webData = extractor.extractWebData(url)
-        assertEquals("#3 Weekly Sharing : Why Continuous Delivery ?", webData.title)
+        assert(!webData.title.isNullOrEmpty())
+        println(webData.title)
+        assert(webData.images.isNotEmpty())
+        println(webData.images.joinToString())
+        assert(!webData.favicon.isNullOrEmpty())
+        println(webData.favicon)
+        assert(!webData.description.isNullOrEmpty())
+        println(webData.description)
+        assert(!webData.publishedDate.isNullOrEmpty())
+        println(webData.publishedDate)
     }
 
 }
