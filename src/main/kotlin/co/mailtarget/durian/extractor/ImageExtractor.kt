@@ -11,7 +11,7 @@ import org.jsoup.nodes.Element
 object ImageExtractor: BaseExtractor() {
 
     private val META_IMAGE = "meta[property~=image$]"
-    private val BAD_IMAGE = ".html|.ico|button|twitter.jpg|facebook.jpg|digg.jpg|digg.png|delicious.png|facebook.png|reddit.jpg|doubleclick|diggthis|diggThis|adserver|/ads/|ec.atdmt.com" +
+    private val BAD_IMAGE = ".html|.ico$|button|digg.jpg|digg.png|delicious.png|reddit.jpg|doubleclick|diggthis|diggThis|adserver|/ads/|ec.atdmt.com" +
             "|mediaplex.com|adsatt|view.atdmt|reuters_fb_share.jpg" +
             "|twitter-login.png|google-plus.png" +
             "|gif$|gif\\?"
@@ -31,7 +31,7 @@ object ImageExtractor: BaseExtractor() {
 
     fun getImagesFromMeta(document: Document): Set<String> {
         val images = HashSet<String>()
-        extractMetas(document, META_IMAGE).filterNotTo(images) { it.matches(JUNK_IMAGE.toRegex()) }
+        extractMetas(document, META_IMAGE).filterTo(images) { !it.matches(JUNK_IMAGE.toRegex()) && !it.matches(BAD_IMAGE.toRegex()) }
         return images
     }
 }
