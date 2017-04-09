@@ -14,8 +14,7 @@ import java.util.regex.Pattern
  */
 class DocumentCleaner
 constructor(
-        private var strategy: Strategy,
-        private var options: ArrayList<Options>
+        var options: ArrayList<Options>
 ) {
 
     private val regexRemoveNodes: String = "^side$|combx|retweet|menucontainer|navbar|^comment$|^commentContent$|^comment-body$|PopularQuestions|contact|foot|footer|Footer|footnote|cnn_strycaptiontxt|links|meta$|scroll|shoutbox|sponsor" +
@@ -50,14 +49,10 @@ constructor(
             Options.CLEAN_SCRIPT_AND_STYLES
     )
 
-    constructor() : this(Strategy.DEFAULT, arrayListOf())
-
-    constructor(options: ArrayList<Options>) : this(Strategy.CUSTOM, options)
+    constructor() : this(arrayListOf())
 
     init {
-        if(strategy == Strategy.DEFAULT) {
-            options.addAll(optionDefault)
-        }
+        options.addAll(optionDefault)
     }
 
     fun clean(document: Document): Document {
@@ -453,11 +448,6 @@ constructor(
     private fun cleanClearfix(document: Document) {
         val elements = document.select("div .clearfix")
         elements.filter { it.text().isEmpty() }.forEach { it.remove() }
-    }
-
-    enum class Strategy {
-        DEFAULT,
-        CUSTOM
     }
 
     enum class Options {

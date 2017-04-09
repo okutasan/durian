@@ -12,7 +12,7 @@ import java.net.URL
  */
 class WebExtractor: Connection()  {
 
-    var cleaner: DocumentCleaner? = null
+    var cleaner: DocumentCleaner = DocumentCleaner()
     var strategy = Strategy.META
 
     /**
@@ -31,7 +31,7 @@ class WebExtractor: Connection()  {
     }
 
     private fun extractContent(url: String, document: Document): WebPage {
-        val doc = cleaner?.clean(document) ?: document
+        val doc = cleaner.clean(document)
         val contentElement = extractContentElement(doc)
         val title = TitleExtractor.getTitleFromContent(doc, contentElement)
         val webPage = WebPage(url, title)
@@ -44,7 +44,7 @@ class WebExtractor: Connection()  {
     }
 
     private fun extractHybrid(url: String, document: Document): WebPage {
-        val doc = cleaner?.clean(document) ?: document
+        val doc = cleaner.clean(document)
         val contentElement = extractContentElement(doc)
         val title = TitleExtractor.getTitle(doc, contentElement)
         val webPage = WebPage(url, title)
@@ -80,8 +80,8 @@ class WebExtractor: Connection()  {
             return this
         }
 
-        fun withCleaner(): Builder {
-            if(extractor.cleaner == null) extractor.cleaner = DocumentCleaner()
+        fun cleanerOptions(options: ArrayList<DocumentCleaner.Options>): Builder {
+            extractor.cleaner.options.addAll(options)
             return this
         }
 

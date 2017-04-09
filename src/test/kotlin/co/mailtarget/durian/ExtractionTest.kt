@@ -17,9 +17,10 @@ class ExtractionTest {
     fun builderTest() {
         val extractor = WebExtractor.Builder
                 .strategy(WebExtractor.Strategy.META)
-                .withCleaner()
+                .cleanerOptions(arrayListOf())
                 .build()
         assertNotNull(extractor.cleaner)
+        assertNotNull(extractor.cleaner.options)
         assertEquals(WebExtractor.Strategy.META, extractor.strategy)
     }
 
@@ -27,7 +28,6 @@ class ExtractionTest {
     fun extractorText() {
         val extractor = WebExtractor.Builder
                 .strategy(WebExtractor.Strategy.META)
-                .withCleaner()
                 .build()
         val webData = extractor.extractWebData(url)
         assert(!webData.title.isNullOrEmpty())
