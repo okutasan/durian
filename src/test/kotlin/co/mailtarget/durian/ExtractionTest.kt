@@ -20,7 +20,7 @@ class ExtractionTest {
                 .cleanerOptions(arrayListOf())
                 .build()
         assertNotNull(extractor.cleaner)
-        assertNotNull(extractor.cleaner.options)
+        assert(!extractor.cleaner.options.isEmpty())
         assertEquals(WebExtractor.Strategy.META, extractor.strategy)
     }
 
