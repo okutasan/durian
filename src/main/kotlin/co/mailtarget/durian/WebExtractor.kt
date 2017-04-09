@@ -3,6 +3,7 @@ package co.mailtarget.durian
 import co.mailtarget.durian.extractor.*
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
+import java.net.URL
 
 /**
  *
@@ -34,6 +35,11 @@ class WebExtractor: Connection()  {
         val contentElement = extractContentElement(doc)
         val title = TitleExtractor.getTitleFromContent(doc, contentElement)
         val webPage = WebPage(url, title)
+        webPage.favicon = FaviconExtractor.getFavicon(document)
+        webPage.image = ImageExtractor.getImageFromContent(document, URL(url), webPage.title, contentElement)
+        webPage.description = SnippetExtractor.getDescriptionFromContent(document, contentElement)
+        webPage.publishedDate = DateExtractor.getDateFromContent(document, contentElement)
+        webPage.keywords = KeywordExtractor.getKeywordsFromContent(document, contentElement)
         return webPage
     }
 
@@ -42,6 +48,11 @@ class WebExtractor: Connection()  {
         val contentElement = extractContentElement(doc)
         val title = TitleExtractor.getTitle(doc, contentElement)
         val webPage = WebPage(url, title)
+        webPage.favicon = FaviconExtractor.getFavicon(document)
+        webPage.image = ImageExtractor.getImage(document, URL(url), webPage.title, contentElement)
+        webPage.description = SnippetExtractor.getDescription(document, contentElement)
+        webPage.publishedDate = DateExtractor.getDate(document, contentElement)
+        webPage.keywords = KeywordExtractor.getKeywords(document, contentElement)
         return webPage
     }
 
@@ -49,7 +60,7 @@ class WebExtractor: Connection()  {
         val title = TitleExtractor.getTitleFromMeta(document)
         val webPage = WebPage(url, title)
         webPage.favicon = FaviconExtractor.getFavicon(document)
-        webPage.images = ArrayList(ImageExtractor.getImagesFromMeta(document))
+        webPage.image = ImageExtractor.getImageFromMeta(document)
         webPage.description = SnippetExtractor.getDescriptionFromMeta(document)
         webPage.publishedDate = DateExtractor.getDateFromMeta(document)
         webPage.keywords = KeywordExtractor.getKeywordsFromMeta(document)

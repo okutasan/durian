@@ -36,7 +36,7 @@ class DocumentFormatter {
         setContent(document, webPage.contentHtml ?: "")
         setTitle(document, webPage.title)
         setFavicon(document, webPage.favicon)
-        setMainImage(document, webPage.images[0])
+        setMainImage(document, webPage.image)
         addPaddingToImgDiv(document)
         return document.html()
     }

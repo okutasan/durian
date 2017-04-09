@@ -28,6 +28,7 @@ object KeywordExtractor : BaseExtractor() {
 
     @JvmOverloads fun getKeywords(document: Document, contentElement: Element = document.body()): List<String> {
         val keywords = getKeywordsFromMeta(document)
+        if(keywords.isEmpty()) return getKeywordsFromContent(document, contentElement)
         return keywords
     }
 

@@ -1,7 +1,12 @@
 package co.mailtarget.durian
 
+import jdk.nashorn.api.scripting.NashornScriptEngine
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
+import javax.script.ScriptEngineManager
+import java.io.InputStreamReader
+import java.io.Reader
+
 
 /**
  *
@@ -23,4 +28,16 @@ open class Connection {
         return Jsoup.connect(url).userAgent(USER_AGENT).timeout(timeout).get()
     }
 
+    fun getNashorn(){
+        val nashorn: NashornScriptEngine = ScriptEngineManager().getEngineByName("nashorn") as NashornScriptEngine
+        nashorn.eval(read("nashorn-polyfill.js"));
+        nashorn.eval(read("react.js"));
+        nashorn.eval(read("showdown.js"));
+        nashorn.eval(read("commentBox.js"));
+    }
+
+    fun read(path: String): Reader {
+        val `in` = javaClass.classLoader.getResourceAsStream(path)
+        return InputStreamReader(`in`)
+    }
 }

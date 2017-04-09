@@ -40,14 +40,14 @@ constructor(
     private val REPLACE_BRS = "(<br[^>]*>[ \n\r\t]*){2,}".toRegex()
 
     private val optionDefault = setOf(
-            Options.cleanHeaderTag,
-            Options.cleanFooterTag,
-            Options.cleanFormTag,
-            Options.cleanBadTags,
-            Options.cleanFooterTag,
-            Options.convertFontToSpan,
-            Options.removeDropCaps,
-            Options.removeScriptsAndStyles
+            Options.CLEAN_HEADER,
+            Options.CLEAN_FOOTER,
+            Options.CLEAN_FORM,
+            Options.CLEAN_BAD_TAGS,
+            Options.CLEAN_FOOTER,
+            Options.FONT_TO_SPAN,
+            Options.CLEAN_DROP_CAPS,
+            Options.CLEAN_SCRIPT_AND_STYLES
     )
 
     constructor() : this(Strategy.DEFAULT, arrayListOf())
@@ -63,55 +63,58 @@ constructor(
     fun clean(document: Document): Document {
         val docToClean = document
 
-        cleanHeaderTag(docToClean)
-        cleanFooterTag(docToClean)
-        cleanFormTag(docToClean)
-        cleanBadTags(docToClean)
+        if(options.contains(Options.CLEAN_HEADER)) cleanHeader(docToClean)
+        if(options.contains(Options.CLEAN_FOOTER)) cleanFooter(docToClean)
+        if(options.contains(Options.CLEAN_FORM)) cleanForm(docToClean)
+        if(options.contains(Options.CLEAN_BAD_TAGS)) {
+            cleanBadTags(docToClean)
+            removeNodesViaRegEx(docToClean, captionPattern)
+            removeNodesViaRegEx(docToClean, googlePattern)
+            removeNodesViaRegEx(docToClean, entriesPattern)
+            removeNodesViaRegEx(docToClean, facebookPattern)
+            removeNodesViaRegEx(docToClean, twitterPattern)
+        }
 
-        convertFontToSpan(docToClean)
+        if(options.contains(Options.FONT_TO_SPAN)) fontToSpan(docToClean)
 
-        removeDropCaps(docToClean)
-        removeScriptsAndStyles(docToClean)
-        removeStyleSheets(docToClean)
-        removeComments(docToClean)
+        if(options.contains(Options.CLEAN_DROP_CAPS)) cleanDropCaps(docToClean)
+        if(options.contains(Options.CLEAN_SCRIPT_AND_STYLES)) {
+            cleanScriptAndStyles(docToClean)
+            cleanStyleSheets(docToClean)
+        }
+        if(options.contains(Options.CLEAN_COMMENTS)) clearComments(docToClean)
 
-        removeNodesViaRegEx(docToClean, captionPattern)
-        removeNodesViaRegEx(docToClean, googlePattern)
-        removeNodesViaRegEx(docToClean, entriesPattern)
-        removeNodesViaRegEx(docToClean, facebookPattern)
-        removeNodesViaRegEx(docToClean, twitterPattern)
+        if(options.contains(Options.CLEAN_SPAN_IN_P)) cleanSpanInP(docToClean)
+        if(options.contains(Options.DOUBLE_BRS_TO_P)) wrapDoubleBrsParentWithP(docToClean)
 
-        cleanUpSpanTagsInParagraphs(docToClean)
-        wrapDoubleBrsParentWithP(docToClean)
+        if(options.contains(Options.CLEAN_HR)) cleanHr(docToClean)
+        if(options.contains(Options.CLEAN_ASIDE)) cleanAside(docToClean)
+        if(options.contains(Options.CLEAN_CODE)) cleanCode(docToClean)
+        if(options.contains(Options.CLEAN_CLEARFIX)) cleanClearfix(docToClean)
+        if(options.contains(Options.CLEAN_EMPTY_P)) cleanEmptyP(docToClean)
+        if(options.contains(Options.CLEAN_EMPTY_H)) cleanEmptyH(docToClean)
 
-        cleanHr(docToClean)
-        cleanAside(docToClean)
-        cleanCode(docToClean)
-        cleanDicClearfix(docToClean)
-        removeEmptyParas(docToClean)
-        removeEmptyH(docToClean)
-
-        if(options.contains(Options.convertNoScriptToDiv)) convertNoScriptToDiv(docToClean)
-        if(options.contains(Options.convertDoubleBrsToP)) convertDoubleBrsToP(docToClean)
-        if(options.contains(Options.convertDivsToParagraphs)) convertDivsToParagraphs(docToClean)
-        if(options.contains(Options.cleanEmTags)) cleanEmTags(docToClean)
+        if(options.contains(Options.NOSCRIPT_TO_DIV)) noScriptToDiv(docToClean)
+        if(options.contains(Options.DOUBLE_BRS_TO_P)) doubleBrsToP(docToClean)
+        if(options.contains(Options.DIV_TO_P)) divToP(docToClean)
+        if(options.contains(Options.CLEAN_EM_TAGS)) cleanEmTags(docToClean)
 
         return docToClean
     }
 
-    private fun convertFontToSpan(docToClean: Document) {
+    private fun fontToSpan(docToClean: Document) {
         val fonts = docToClean.getElementsByTag("font")
         for (font in fonts) {
             changeElementTag(docToClean, font, "span")
         }
     }
 
-    private fun removeStyleSheets(docToClean: Document) {
+    private fun cleanStyleSheets(docToClean: Document) {
         val stylesheets = docToClean.select("link[rel='stylesheet']")
         stylesheets.remove()
     }
 
-    private fun convertDoubleBrsToP(docToClean: Document) {
+    private fun doubleBrsToP(docToClean: Document) {
         val doubleBrs = docToClean.select("br + br")
         for (br in doubleBrs) {
             // we hope that there's a 'p' up there....
@@ -147,14 +150,14 @@ constructor(
         }
     }
 
-    private fun removeComments(docToClean: Document) {
+    private fun clearComments(docToClean: Document) {
         val childNodes = docToClean.childNodes()
         for (node in childNodes) {
             cleanComments(node)
         }
     }
 
-    private fun convertNoScriptToDiv(docToClean: Document) {
+    private fun noScriptToDiv(docToClean: Document) {
         val noScripts = docToClean.getElementsByTag("noscript")
         for (noScript in noScripts) {
             changeElementTag(docToClean, noScript, "div")
@@ -187,13 +190,13 @@ constructor(
         }
     }
 
-    private fun removeEmptyParas(docToClean: Document) {
+    private fun cleanEmptyP(docToClean: Document) {
         val paras = docToClean.select("p")
         paras.filter { para -> para.text().trim { it <= ' ' }.isEmpty() && para.childNodes().size == 0 }
                 .forEach { it.remove() }
     }
 
-    private fun removeEmptyH(docToClean: Document) {
+    private fun cleanEmptyH(docToClean: Document) {
         val paras = docToClean.select("h2, h3, h4, h5, h6")
         paras.filter { it.text().isEmpty() && it.childNodes().size == 0 }.forEach { it.remove() }
     }
@@ -202,7 +205,7 @@ constructor(
      * remove those css drop caps where they put the first letter in big text in
      * the 1st paragraph
      */
-    private fun removeDropCaps(document: Document) {
+    private fun cleanDropCaps(document: Document) {
         val items = document.select("span[class~=(dropcap|drop_cap)]")
         for (item in items) {
             val tn = TextNode(item.text(), document.baseUri())
@@ -252,7 +255,7 @@ constructor(
 
     }
 
-    private fun removeScriptsAndStyles(document: Document) {
+    private fun cleanScriptAndStyles(document: Document) {
         val scripts = document.getElementsByTag("script")
         for (item in scripts) {
             item.remove()
@@ -263,7 +266,7 @@ constructor(
         }
     }
 
-    private fun convertDivsToParagraphs(document: Document) {
+    private fun divToP(document: Document) {
         val divs = document.getElementsByTag("div")
         for (div in divs) {
             try {
@@ -382,7 +385,7 @@ constructor(
 
     }
 
-    private fun cleanUpSpanTagsInParagraphs(document: Document) {
+    private fun cleanSpanInP(document: Document) {
         val span = document.getElementsByTag("span")
         for (item in span) {
             if (item.parent().nodeName() == "p") {
@@ -405,21 +408,21 @@ constructor(
         }
     }
 
-    private fun cleanHeaderTag(document: Document) {
+    private fun cleanHeader(document: Document) {
         val elements = document.getElementsByTag("header")
         for (node in elements) {
             node.remove()
         }
     }
 
-    private fun cleanFormTag(document: Document) {
+    private fun cleanForm(document: Document) {
         val elements = document.getElementsByTag("form")
         for (node in elements) {
             node.remove()
         }
     }
 
-    private fun cleanFooterTag(document: Document) {
+    private fun cleanFooter(document: Document) {
         val elements = document.getElementsByTag("footer")
         for (node in elements) {
             node.remove()
@@ -447,7 +450,7 @@ constructor(
         }
     }
 
-    private fun cleanDicClearfix(document: Document) {
+    private fun cleanClearfix(document: Document) {
         val elements = document.select("div .clearfix")
         elements.filter { it.text().isEmpty() }.forEach { it.remove() }
     }
@@ -458,30 +461,25 @@ constructor(
     }
 
     enum class Options {
-        convertDoubleBrsToP,
-        convertFontToSpan,
-        removeStyleSheets,
-        wrapDoubleBrsParentWithP,
-        removeComments,
-        convertNoScriptToDiv,
-        cleanComments,
-        removeEmptyParas,
-        removeEmptyH,
-        removeDropCaps,
-        cleanBadTags,
-        removeScriptsAndStyles,
-        convertDivToParagraph,
-        convertDivsToParagraphs,
-        replaceElementsWithPara,
-        cleanUpSpanTagsInParagraphs,
-        cleanEmTags,
-        cleanHeaderTag,
-        cleanFormTag,
-        cleanFooterTag,
-        cleanHr,
-        cleanAside,
-        cleanCode,
-        cleanDicClearfix,
+        CLEAN_COMMENTS,
+        CLEAN_EMPTY_P,
+        CLEAN_EMPTY_H,
+        CLEAN_DROP_CAPS,
+        CLEAN_BAD_TAGS,
+        CLEAN_SCRIPT_AND_STYLES,
+        CLEAN_SPAN_IN_P,
+        CLEAN_HEADER,
+        CLEAN_FORM,
+        CLEAN_FOOTER,
+        CLEAN_HR,
+        CLEAN_ASIDE,
+        CLEAN_CODE,
+        CLEAN_CLEARFIX,
+        CLEAN_EM_TAGS,
+        FONT_TO_SPAN,
+        DOUBLE_BRS_TO_P,
+        NOSCRIPT_TO_DIV,
+        DIV_TO_P,
     }
 
 }
