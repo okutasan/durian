@@ -1,5 +1,7 @@
 package co.mailtarget.durian
 
+import org.jsoup.nodes.Element
+
 /**
  *
  * @author masasdani
@@ -11,6 +13,5 @@ data class WebPage constructor(var url: String, var title: String) {
     var image: String? = null
     var keywords: List<String> = emptyList()
     var publishedDate: String? = null
-    var content: String? = null
-    var contentHtml: String? = null
+    var content: Element? = null
 }

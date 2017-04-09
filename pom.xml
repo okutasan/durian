@@ -41,6 +41,7 @@
         <common.lang3.version>3.5</common.lang3.version>
         <junit.version>4.12</junit.version>
         <jodatime.version>2.9.4</jodatime.version>
+        <nangka.version>0.0.6</nangka.version>
         <maven.compiler.version>3.5.1</maven.compiler.version>
         <maven.assembly.version>3.0.0</maven.assembly.version>
         <maven.source.version>3.0.1</maven.source.version>
@@ -59,6 +60,11 @@
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
             <version>${common.lang3.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.masasdani</groupId>
+            <artifactId>nangka</artifactId>
+            <version>${nangka.version}</version>
         </dependency>
         <dependency>
             <groupId>junit</groupId>

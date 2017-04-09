@@ -21,7 +21,7 @@ class WebExtractor: Connection()  {
      * @param url
      * @return
      */
-    fun extractWebData(url: String): WebPage {
+    fun extract(url: String): WebPage {
         val document = getDocument(url)
         when (strategy) {
             Strategy.CONTENT -> return extractContent(url, document)
@@ -40,6 +40,7 @@ class WebExtractor: Connection()  {
         webPage.description = SnippetExtractor.getDescriptionFromContent(document, contentElement)
         webPage.publishedDate = DateExtractor.getDateFromContent(document, contentElement)
         webPage.keywords = KeywordExtractor.getKeywordsFromContent(document, contentElement)
+        webPage.content = contentElement
         return webPage
     }
 
@@ -53,6 +54,7 @@ class WebExtractor: Connection()  {
         webPage.description = SnippetExtractor.getDescription(document, contentElement)
         webPage.publishedDate = DateExtractor.getDate(document, contentElement)
         webPage.keywords = KeywordExtractor.getKeywords(document, contentElement)
+        webPage.content = contentElement
         return webPage
     }
 
@@ -64,6 +66,7 @@ class WebExtractor: Connection()  {
         webPage.description = SnippetExtractor.getDescriptionFromMeta(document)
         webPage.publishedDate = DateExtractor.getDateFromMeta(document)
         webPage.keywords = KeywordExtractor.getKeywordsFromMeta(document)
+        webPage.content = document.body()
         return webPage
     }
 

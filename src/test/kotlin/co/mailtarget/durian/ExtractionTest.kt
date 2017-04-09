@@ -15,21 +15,38 @@ class ExtractionTest {
 
     @Test
     fun builderTest() {
-        val extractor = WebExtractor.Builder
-                .strategy(WebExtractor.Strategy.META)
-                .cleanerOptions(arrayListOf())
-                .build()
-        assertNotNull(extractor.cleaner)
-        assert(!extractor.cleaner.options.isEmpty())
+        val extractor = buildExtractor(WebExtractor.Strategy.META, arrayListOf())
         assertEquals(WebExtractor.Strategy.META, extractor.strategy)
     }
 
-    @Test
-    fun extractorText() {
+    private fun buildExtractor(strategy: WebExtractor.Strategy, options: ArrayList<DocumentCleaner.Options>): WebExtractor {
         val extractor = WebExtractor.Builder
-                .strategy(WebExtractor.Strategy.META)
+                .strategy(strategy)
+                .cleanerOptions(options)
                 .build()
-        val webData = extractor.extractWebData(url)
+        assertNotNull(extractor.cleaner)
+        assert(!extractor.cleaner.options.isEmpty())
+        return extractor
+    }
+
+    @Test
+    fun metaExtractorTest(){
+        extractorTest(WebExtractor.Strategy.META, arrayListOf())
+    }
+
+    @Test
+    fun contentExtractorTest(){
+        extractorTest(WebExtractor.Strategy.CONTENT, arrayListOf())
+    }
+
+    @Test
+    fun hybridExtractorTest(){
+        extractorTest(WebExtractor.Strategy.HYBRID, arrayListOf())
+    }
+
+    private fun extractorTest(strategy: WebExtractor.Strategy, options: ArrayList<DocumentCleaner.Options>) {
+        val extractor = buildExtractor(strategy, options)
+        val webData = extractor.extract(url)
         assert(!webData.title.isNullOrEmpty())
         println(webData.title)
         assert(!webData.image.isNullOrEmpty())
@@ -38,8 +55,19 @@ class ExtractionTest {
         println("favicon: ${webData.favicon}")
         assert(!webData.description.isNullOrEmpty())
         println("desc: ${webData.description}")
-        assert(!webData.publishedDate.isNullOrEmpty())
-        println("date: ${webData.publishedDate}")
+        val content = webData.content?.text()
+        assert(!content.isNullOrEmpty())
+        println("date: $content")
     }
+
+    @Test
+    fun formatterTest() {
+        val extractor = buildExtractor(WebExtractor.Strategy.HYBRID, arrayListOf())
+        val webPage = extractor.extract(url)
+        val formmattedDocument = DocumentFormatter().format(webPage)
+        assert(!formmattedDocument.isNullOrEmpty())
+        println(formmattedDocument)
+    }
+
 
 }

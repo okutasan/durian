@@ -17,6 +17,7 @@ import java.io.InputStream
  */
 class DocumentFormatter {
 
+    private val TEMPLATE_FILENAME = "template.html"
     private val htmlTemplate: String
 
     init {
@@ -31,9 +32,10 @@ class DocumentFormatter {
      * @param webPage webpage
      * @return String
      */
-    fun formatDocument(webPage: WebPage): String {
+    fun format(webPage: WebPage): String? {
+        if(webPage.content == null) return null
         val document = Jsoup.parse(htmlTemplate)
-        setContent(document, webPage.contentHtml ?: "")
+        setContent(document, webPage.content?.html() ?: "")
         setTitle(document, webPage.title)
         setFavicon(document, webPage.favicon)
         setMainImage(document, webPage.image)
@@ -119,7 +121,7 @@ class DocumentFormatter {
     /**
      * some of content has image containin in div,
      * add a image class to it to do css styling on it
-
+     *
      * @param document document
      */
     private fun addPaddingToImgDiv(document: Document) {
@@ -128,11 +130,6 @@ class DocumentFormatter {
         for (element in divElements) {
             element.parent().addClass("image")
         }
-    }
-
-    companion object {
-
-        private val TEMPLATE_FILENAME = "template.html"
     }
 
 }
