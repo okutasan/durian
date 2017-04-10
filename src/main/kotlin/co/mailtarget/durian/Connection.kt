@@ -28,16 +28,4 @@ open class Connection {
         return Jsoup.connect(url).userAgent(USER_AGENT).timeout(timeout).get()
     }
 
-    fun getNashorn(){
-        val nashorn: NashornScriptEngine = ScriptEngineManager().getEngineByName("nashorn") as NashornScriptEngine
-        nashorn.eval(read("nashorn-polyfill.js"));
-        nashorn.eval(read("react.js"));
-        nashorn.eval(read("showdown.js"));
-        nashorn.eval(read("commentBox.js"));
-    }
-
-    fun read(path: String): Reader {
-        val `in` = javaClass.classLoader.getResourceAsStream(path)
-        return InputStreamReader(`in`)
-    }
 }
