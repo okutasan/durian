@@ -11,7 +11,7 @@ import kotlin.test.assertNotNull
  */
 class ExtractionTest {
 
-    private val url = "https://news.detik.com/berita/d-3466341/polisi-pemilik-yang-aniaya-anjing-di-kebon-jeruk-bisa-dipidana?_ga=1.98411999.19828648.1488992470"
+    private val url = "https://blog.mailtarget.co/haruskah-ucapkan-selamat-tinggal-pada-inactive-subscriber/"
 
     @Test
     fun builderTest() {
@@ -57,7 +57,7 @@ class ExtractionTest {
         println("desc: ${webData.description}")
         val content = webData.content?.text()
         assert(!content.isNullOrEmpty())
-        println("date: $content")
+        println("content: $content")
     }
 
     @Test

@@ -18,9 +18,13 @@ object SnippetExtractor: BaseExtractor() {
     }
 
     @JvmOverloads fun getDescriptionFromContent(document: Document, contentElement: Element = document.body()): String? {
-        var snippet = contentElement.text().substring(MAX_SNIPPET_LENGHT)
-        snippet = snippet.replace(" [^ ]+$", "")
-        return "$snippet ..."
+        val content = contentElement.text()
+        if(content.length > MAX_SNIPPET_LENGHT) {
+            var snippet = content.substring(0, MAX_SNIPPET_LENGHT)
+            snippet = snippet.replace("\\w+$".toRegex(), "")
+            return snippet
+        }
+        return content
     }
 
     @JvmOverloads fun getDescription(document: Document, contentElement: Element = document.body()): String? {

@@ -73,14 +73,10 @@ constructor(
         if(options.contains(Options.FONT_TO_SPAN)) fontToSpan(docToClean)
 
         if(options.contains(Options.CLEAN_DROP_CAPS)) cleanDropCaps(docToClean)
-        if(options.contains(Options.CLEAN_SCRIPT_AND_STYLES)) {
-            cleanScriptAndStyles(docToClean)
-            cleanStyleSheets(docToClean)
-        }
+        if(options.contains(Options.CLEAN_SCRIPT_AND_STYLES)) cleanScriptAndStyles(docToClean)
         if(options.contains(Options.CLEAN_COMMENTS)) clearComments(docToClean)
 
         if(options.contains(Options.CLEAN_SPAN_IN_P)) cleanSpanInP(docToClean)
-        if(options.contains(Options.DOUBLE_BRS_TO_P)) wrapDoubleBrsParentWithP(docToClean)
 
         if(options.contains(Options.CLEAN_HR)) cleanHr(docToClean)
         if(options.contains(Options.CLEAN_ASIDE)) cleanAside(docToClean)
@@ -90,6 +86,7 @@ constructor(
         if(options.contains(Options.CLEAN_EMPTY_H)) cleanEmptyH(docToClean)
 
         if(options.contains(Options.NOSCRIPT_TO_DIV)) noScriptToDiv(docToClean)
+        if(options.contains(Options.DOUBLE_BRS_TO_P)) wrapDoubleBrsParentWithP(docToClean)
         if(options.contains(Options.DOUBLE_BRS_TO_P)) doubleBrsToP(docToClean)
         if(options.contains(Options.DIV_TO_P)) divToP(docToClean)
         if(options.contains(Options.CLEAN_EM_TAGS)) cleanEmTags(docToClean)
@@ -102,11 +99,6 @@ constructor(
         for (font in fonts) {
             changeElementTag(docToClean, font, "span")
         }
-    }
-
-    private fun cleanStyleSheets(docToClean: Document) {
-        val stylesheets = docToClean.select("link[rel='stylesheet']")
-        stylesheets.remove()
     }
 
     private fun doubleBrsToP(docToClean: Document) {
@@ -213,25 +205,19 @@ constructor(
         val children = document.body().children()
 
         val naughtyList = children.select(queryNaughtyIDs)
-        for (node in naughtyList) {
-            removeNode(node)
-        }
+        for (node in naughtyList) removeNode(node)
 
         val naughtyList3 = children.select(queryNaughtyClasses)
-        for (node in naughtyList3) {
-            removeNode(node)
-        }
+        for (node in naughtyList3) removeNode(node)
 
         // starmagazine puts shit on name tags instead of class or id
         val naughtyList5 = children.select(queryNaughtyNames)
-        for (node in naughtyList5) {
-            removeNode(node)
-        }
+        for (node in naughtyList5) removeNode(node)
     }
 
     private fun removeNode(node: Element?) {
         if (node == null || node.parent() == null) return
-        node.remove()
+        if (node.getElementsByTag("h1").isEmpty() && node.select("p, br+br").isEmpty()) node.remove()
     }
 
     private fun removeNodesViaRegEx(document: Document, pattern: Pattern) {
@@ -259,6 +245,8 @@ constructor(
         for (style in styles) {
             style.remove()
         }
+        val stylesheets = document.select("link[rel='stylesheet']")
+        stylesheets.remove()
     }
 
     private fun divToP(document: Document) {

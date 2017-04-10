@@ -33,7 +33,7 @@ class WebExtractor: Connection()  {
     private fun extractContent(url: String, document: Document): WebPage {
         val doc = cleaner.clean(document)
         val contentElement = extractContentElement(doc)
-        val title = TitleExtractor.getTitleFromContent(doc, contentElement)
+        val title = TitleExtractor.getTitleFromContent(doc, document.body())
         val webPage = WebPage(url, title)
         webPage.favicon = FaviconExtractor.getFavicon(document)
         webPage.image = ImageExtractor.getImageFromContent(document, URL(url), webPage.title, contentElement)
@@ -47,7 +47,7 @@ class WebExtractor: Connection()  {
     private fun extractHybrid(url: String, document: Document): WebPage {
         val doc = cleaner.clean(document)
         val contentElement = extractContentElement(doc)
-        val title = TitleExtractor.getTitle(doc, contentElement)
+        val title = TitleExtractor.getTitle(doc, document.body())
         val webPage = WebPage(url, title)
         webPage.favicon = FaviconExtractor.getFavicon(document)
         webPage.image = ImageExtractor.getImage(document, URL(url), webPage.title, contentElement)
@@ -71,7 +71,7 @@ class WebExtractor: Connection()  {
     }
 
     private fun extractContentElement(document: Document): Element {
-        return document.body()
+        return ContentExtractor.getContentElement(document)
     }
 
     object Builder {
