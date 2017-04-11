@@ -1,5 +1,56 @@
 Durian Extractor
-================
+=
 
 Web page extractor and readability using jsoup. still on research, not mature yet.
+
+Prerequisites:
+-
+*	Java JDK-1.8 or higher
+*	Apache Maven 3 or higher
+*	Please refer http://maven.apache.org/guides/getting-started/maven-in-five-minutes.html for any help in Maven.
+
+
+Install
+-
+
+because this project not pushed to any public maven repos, you should install it first locally
+
+        mvn clean install
+
+add this project as dependency of your project
+
+	    <dependency>
+            <groupId>co.mailtarget</groupId>
+            <artifactId>durian</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+
+        
+Usage
+-
+
+###kotin
+        
+        val extractor = WebExtractor.Builder
+                        .strategy(Strategy.HYBRID)
+                        .build()
+        
+        val webData = extractor.extract(url)
+        
+
+###Java
+        
+        WebExtractor extractor = WebExtractor.Builder()
+                        .strategy(Strategy.HYBRID)
+                        .build()
+        WebData webData = extractor.extract(url)
+        
+Options
+-
+
+###Extract Strategy 
+
+- **META** : fastest method, just parse content from meta
+- **CONTENT** : prefer using content as source of extraction
+- **HYBRID** : fetch from meta first, if not found search deeper from content
 
