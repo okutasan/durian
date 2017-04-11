@@ -8,7 +8,7 @@ import org.jsoup.nodes.Element
  * @author masasdani
  * @since 4/7/17
  */
-object PublisherExtractor : BaseExtractor() {
+object AuthorExtractor : BaseExtractor() {
 
     private val META_PUBLISHER = ""
 

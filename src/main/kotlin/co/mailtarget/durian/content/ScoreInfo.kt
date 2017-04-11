@@ -1,4 +1,4 @@
-package co.mailtarget.durian.util
+package co.mailtarget.durian.content
 
 import org.jsoup.nodes.Element
 

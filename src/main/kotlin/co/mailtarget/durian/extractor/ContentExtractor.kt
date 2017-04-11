@@ -1,7 +1,7 @@
 package co.mailtarget.durian.extractor
 
-import co.mailtarget.durian.util.AddSiblings
-import co.mailtarget.durian.util.ScoreInfo
+import co.mailtarget.durian.content.AddSiblings
+import co.mailtarget.durian.content.ScoreInfo
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
 import org.jsoup.select.Elements
@@ -34,10 +34,59 @@ object ContentExtractor {
 
 
     /**
+     * @param doc
+     * @return
+     */
+    fun getContentElement(document: Document): Element {
+        var result = getContentByTitle(document)
+        if(result == null) result = getArticleByTag(document)
+        if (result == null) {
+            result = fetchArticleContent(document)
+        }
+        return result ?: document.body()
+    }
+
+    private fun getContentByTitle(document: Document): Element? {
+        var titleCandicates = document.getElementsByTag("h1")
+        if (titleCandicates.size == 0) {
+            titleCandicates = document.getElementsByTag("h2")
+            if (titleCandicates.size == 0) {
+                titleCandicates = document.getElementsByTag("h3")
+            }
+        }
+        var result: Element? = null
+        if (titleCandicates.size > 0) {
+            val topElement = getContentTargets(titleCandicates.first(), document)
+            result = getMatchesContentByHrOrP(topElement)
+        }
+        return result
+    }
+
+    private fun getArticleByTag(document: Document): Element? {
+        return document.getElementsByTag("article")?.first()
+    }
+
+    private fun getContentTargets(topElement: Element, document: Document): Elements {
+        val siblings = topElement.siblingElements()
+        val targets = siblings.select("p, br + br")
+        if(targets.size > 3 || topElement.parent() == null) return targets
+        return getContentTargets(topElement.parent(), document)
+    }
+
+    private fun getMatchesContentByHrOrP(targets: Elements): Element? {
+        for (element in targets) {
+            if (element.parent().select("p, br+br").size > 3) {
+                return element.parent()
+            }
+        }
+        return null
+    }
+
+    /**
      * @param document
      * @return
      */
-    fun fetchArticleContent(document: Document): Element? {
+    private fun fetchArticleContent(document: Document): Element? {
         var topNode: Element? = null
         val parentNodes = HashSet<Element>()
         val nodesToCheck = getNodesToCheck(document)
@@ -77,10 +126,9 @@ object ContentExtractor {
 
     /**
      * @param element
-     * *
      * @return
      */
-    fun getElementScore(element: Element): Double {
+    private fun getElementScore(element: Element): Double {
         var contentScore = 0.0
         val scoreTags = ScoreTags.getTagName(element.tagName())
         when (scoreTags) {
@@ -104,7 +152,7 @@ object ContentExtractor {
      * @param e
      * @return
      */
-    fun getClassWeight(e: Element): Double {
+    private fun getClassWeight(e: Element): Double {
         var weight = 0.0
         if (POSITIVE.matcher(e.className()).find())
             weight += 35.0
@@ -129,7 +177,7 @@ object ContentExtractor {
      * *
      * @return
      */
-    fun weightChildNodes(e: Element): Int {
+    private fun weightChildNodes(e: Element): Int {
         var weight = 0
         var caption: Element? = null
         val headerEls = ArrayList<Element>(5)
@@ -176,7 +224,7 @@ object ContentExtractor {
      * @param ownText
      * @return
      */
-    fun calcWeightForChild(child: Element, ownText: String): Int {
+    private fun calcWeightForChild(child: Element, ownText: String): Int {
         val `val`: Int
         val c = 0
         if (c > 5) `val` = -30
@@ -197,51 +245,6 @@ object ContentExtractor {
             }
         }
         return nodesToCheck.keys
-    }
-
-    fun getContentElement(document: Document): Element {
-        var result = getContentByTitle(document)
-        if(result == null) result = getArticleByTag(document)
-        if (result == null) {
-            result = fetchArticleContent(document)
-        }
-        return result ?: document.body()
-    }
-
-    private fun getContentByTitle(document: Document): Element? {
-        var titleCandicates = document.getElementsByTag("h1")
-        if (titleCandicates.size == 0) {
-            titleCandicates = document.getElementsByTag("h2")
-            if (titleCandicates.size == 0) {
-                titleCandicates = document.getElementsByTag("h3")
-            }
-        }
-        var result: Element? = null
-        if (titleCandicates.size > 0) {
-            val topElement = getContentTargets(titleCandicates.first(), document)
-            result = getMatchesContentByHrOrP(topElement)
-        }
-        return result
-    }
-
-    private fun getArticleByTag(document: Document): Element? {
-        return document.getElementsByTag("article")?.first()
-    }
-
-    private fun getContentTargets(topElement: Element, document: Document): Elements {
-        val siblings = topElement.siblingElements()
-        val targets = siblings.select("p, br + br")
-        if(targets.size > 3 || topElement.parent() == null) return targets
-        return getContentTargets(topElement.parent(), document)
-    }
-
-    private fun getMatchesContentByHrOrP(targets: Elements): Element? {
-        for (element in targets) {
-            if (element.parent().select("p, br+br").size > 3) {
-                return element.parent()
-            }
-        }
-        return null
     }
 
     enum class ScoreTags {
