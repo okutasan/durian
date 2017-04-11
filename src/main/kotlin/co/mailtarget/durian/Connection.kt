@@ -1,12 +1,7 @@
 package co.mailtarget.durian
 
-import jdk.nashorn.api.scripting.NashornScriptEngine
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
-import javax.script.ScriptEngineManager
-import java.io.InputStreamReader
-import java.io.Reader
-
 
 /**
  *
