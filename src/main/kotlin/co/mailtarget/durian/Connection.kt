@@ -10,7 +10,7 @@ import org.jsoup.nodes.Document
  */
 open class Connection {
 
-    private val CONNECTION_TIMEOUT = 30000
+    val CONNECTION_TIMEOUT = 30000
     private val USER_AGENT = "Mozilla/5.0 (Linux; Android 4.4; Nexus 5 Build/_BuildID_) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/30.0.0.0 Mobile Safari/537.36";
 
     @Throws(Exception::class)

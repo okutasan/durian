@@ -1,10 +1,13 @@
 package co.mailtarget.durian
 
 import co.mailtarget.durian.extractor.*
+import com.machinepublishers.jbrowserdriver.JBrowserDriver
+import com.machinepublishers.jbrowserdriver.Settings
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
 import java.net.URL
+import java.util.logging.Level
 
 /**
  *
@@ -13,8 +16,25 @@ import java.net.URL
  */
 class WebExtractor: Connection()  {
 
+    val MAX_PROCESS = 1000
     var cleaner: DocumentCleaner = DocumentCleaner()
     var strategy = Strategy.META
+    var jBrowserDriver = JBrowserDriver(Settings.builder()
+            .csrf()
+            .headless(true)
+            .javascript(true)
+            .logJavascript(false)
+            .loggerLevel(Level.OFF)
+            .ignoreDialogs(true)
+            .cache(true)
+            .processes(MAX_PROCESS)
+            .maxConnections(MAX_PROCESS)
+            .connectionReqTimeout(CONNECTION_TIMEOUT)
+            .ajaxResourceTimeout(CONNECTION_TIMEOUT.toLong())
+            .socketTimeout(CONNECTION_TIMEOUT)
+            .connectTimeout(CONNECTION_TIMEOUT)
+            .quickRender(true)
+            .build())
 
     /**
      * attemp to extract web data
@@ -29,6 +49,36 @@ class WebExtractor: Connection()  {
             Strategy.HYBRID -> return extractHybrid(url, document)
             else -> return extractMeta(url, document)
         }
+    }
+
+    /**
+     * attemp to extract web data
+     *
+     * @param url
+     * @return
+     */
+    fun extract(url: String, html: String): WebPage {
+        val document = Jsoup.parse(html)
+        when (strategy) {
+            Strategy.CONTENT -> return extractContent(url, document)
+            Strategy.HYBRID -> return extractHybrid(url, document)
+            else -> return extractMeta(url, document)
+        }
+    }
+
+
+    /**
+     * attemp to extract web data
+     *
+     * @param url
+     * @return
+     */
+    fun extract(url: String, forceJavascript: Boolean): WebPage {
+        if(forceJavascript) {
+            jBrowserDriver.get(url)
+            val html = jBrowserDriver.pageSource
+            return extract(url, html)
+        } else return extract(url)
     }
 
     private fun extractContent(url: String, document: Document): WebPage {

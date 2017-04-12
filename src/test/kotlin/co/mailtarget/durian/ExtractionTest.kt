@@ -31,22 +31,28 @@ class ExtractionTest {
 
     @Test
     fun metaExtractorTest(){
-        extractorTest(WebExtractor.Strategy.META, arrayListOf())
+        extractorTest(WebExtractor.Strategy.META, arrayListOf(), false)
+    }
+
+
+    @Test
+    fun javascriptExtractorTest(){
+        extractorTest(WebExtractor.Strategy.META, arrayListOf(), true)
     }
 
     @Test
     fun contentExtractorTest(){
-        extractorTest(WebExtractor.Strategy.CONTENT, arrayListOf())
+        extractorTest(WebExtractor.Strategy.CONTENT, arrayListOf(), false)
     }
 
     @Test
     fun hybridExtractorTest(){
-        extractorTest(WebExtractor.Strategy.HYBRID, arrayListOf())
+        extractorTest(WebExtractor.Strategy.HYBRID, arrayListOf(), false)
     }
 
-    private fun extractorTest(strategy: WebExtractor.Strategy, options: ArrayList<DocumentCleaner.Options>) {
+    private fun extractorTest(strategy: WebExtractor.Strategy, options: ArrayList<DocumentCleaner.Options>, forceJs: Boolean) {
         val extractor = buildExtractor(strategy, options)
-        val webData = extractor.extract(url)
+        val webData = extractor.extract(url, forceJs)
         assert(!webData.title.isNullOrEmpty())
         println(webData.title)
         assert(!webData.image.isNullOrEmpty())
