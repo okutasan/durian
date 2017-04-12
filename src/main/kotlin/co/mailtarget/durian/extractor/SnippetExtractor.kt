@@ -29,7 +29,7 @@ object SnippetExtractor: BaseExtractor() {
 
     @JvmOverloads fun getDescription(document: Document, contentElement: Element = document.body()): String? {
         val desc = getDescriptionFromMeta(document)
-        if(desc.isNullOrEmpty()) {
+        if(desc == null || desc.length < MAX_SNIPPET_LENGHT) {
             return getDescriptionFromContent(document, contentElement)
         }
         return desc

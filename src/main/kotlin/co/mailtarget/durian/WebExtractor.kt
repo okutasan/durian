@@ -1,6 +1,7 @@
 package co.mailtarget.durian
 
 import co.mailtarget.durian.extractor.*
+import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
 import java.net.URL
