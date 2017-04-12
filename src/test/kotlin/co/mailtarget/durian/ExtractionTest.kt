@@ -37,7 +37,7 @@ class ExtractionTest {
 
     @Test
     fun javascriptExtractorTest(){
-        extractorTest(WebExtractor.Strategy.META, arrayListOf(), true)
+        extractorTest(WebExtractor.Strategy.HYBRID, arrayListOf(), true)
     }
 
     @Test
