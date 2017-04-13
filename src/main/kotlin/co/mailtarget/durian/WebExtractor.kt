@@ -24,7 +24,6 @@ class WebExtractor: Connection()  {
             .headless(true)
             .javascript(true)
             .logJavascript(false)
-            .loggerLevel(Level.OFF)
             .ignoreDialogs(true)
             .cache(true)
             .processes(MAX_PROCESS)

@@ -44,7 +44,6 @@
         <nangka.version>0.0.6</nangka.version>
         <jbrowser.version>0.17.7</jbrowser.version>
         <selenium.version>2.53.0</selenium.version>
-
         <maven.compiler.version>3.5.1</maven.compiler.version>
         <maven.assembly.version>3.0.0</maven.assembly.version>
         <maven.source.version>3.0.1</maven.source.version>
@@ -90,11 +89,6 @@
             <version>${selenium.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.seleniumhq.selenium</groupId>
-            <artifactId>selenium-support</artifactId>
-            <version>${selenium.version}</version>
-        </dependency>
-        <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>${junit.version}</version>
@@ -113,6 +107,10 @@
             <name>Maven Central</name>
             <url>https://repo1.maven.org/maven2/</url>
             <layout>default</layout>
+        </repository>
+        <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
         </repository>
     </repositories>
 
