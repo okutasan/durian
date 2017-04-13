@@ -14,26 +14,10 @@ import java.util.logging.Level
  * @author masasdani
  * @since 4/5/17
  */
-class WebExtractor: Connection()  {
+class WebExtractor(val driver: JBrowserDriver): Connection()  {
 
-    val MAX_PROCESS = 1000
     var cleaner: DocumentCleaner = DocumentCleaner()
     var strategy = Strategy.META
-    var jBrowserDriver = JBrowserDriver(Settings.builder()
-            .csrf()
-            .headless(true)
-            .javascript(true)
-            .logJavascript(false)
-            .ignoreDialogs(true)
-            .cache(true)
-            .processes(MAX_PROCESS)
-            .maxConnections(MAX_PROCESS)
-            .connectionReqTimeout(CONNECTION_TIMEOUT)
-            .ajaxResourceTimeout(CONNECTION_TIMEOUT.toLong())
-            .socketTimeout(CONNECTION_TIMEOUT)
-            .connectTimeout(CONNECTION_TIMEOUT)
-            .quickRender(true)
-            .build())
 
     /**
      * attemp to extract web data
@@ -74,10 +58,11 @@ class WebExtractor: Connection()  {
      */
     fun extract(url: String, forceJavascript: Boolean): WebPage {
         if(forceJavascript) {
-            jBrowserDriver.get(url)
-            val html = jBrowserDriver.pageSource
+            driver.get(url)
+            val html = driver.pageSource
             return extract(url, html)
-        } else return extract(url)
+        }
+        return extract(url)
     }
 
     private fun extractContent(url: String, document: Document): WebPage {
@@ -126,19 +111,47 @@ class WebExtractor: Connection()  {
 
     object Builder {
 
-        private val extractor = WebExtractor()
+        private val MAX_PROCESS = 1000
+        private val CONNECTION_TIMEOUT = 3000
+        private val driverSettingBuilder = Settings.builder()
+                .csrf()
+                .headless(true)
+                .javascript(true)
+                .logJavascript(false)
+                .ignoreDialogs(true)
+                .cache(true)
+                .processes(MAX_PROCESS)
+                .maxConnections(MAX_PROCESS)
+                .connectionReqTimeout(CONNECTION_TIMEOUT)
+                .ajaxResourceTimeout(CONNECTION_TIMEOUT.toLong())
+                .socketTimeout(CONNECTION_TIMEOUT)
+                .connectTimeout(CONNECTION_TIMEOUT)
+                .quickRender(true)
+
+        private var strategy = Strategy.META
+        private var cleanerOptions: ArrayList<DocumentCleaner.Options> = arrayListOf()
 
         fun strategy(strategy: Strategy): Builder {
-            extractor.strategy = strategy
+            this.strategy = strategy
             return this
         }
 
         fun cleanerOptions(options: ArrayList<DocumentCleaner.Options>): Builder {
-            extractor.cleaner.options.addAll(options)
+            this.cleanerOptions = options
+            return this
+        }
+
+        fun disableLogging(disableLogging: Boolean): Builder {
+            if(disableLogging) {
+                driverSettingBuilder.loggerLevel(Level.OFF)
+            }
             return this
         }
 
         fun build(): WebExtractor {
+            val extractor = WebExtractor(JBrowserDriver(driverSettingBuilder.build()))
+            extractor.strategy = this.strategy
+            extractor.cleaner.options.addAll(cleanerOptions)
             return extractor
         }
     }
