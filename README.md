@@ -14,6 +14,14 @@ Prerequisites:
 Install
 -
 
+tried in MAC OS machine and work well, on centos machine, please install
+
+yum groupinstall -y "Fonts"
+
+yum install gtk2 
+
+optional : gtkhtml3 libXtst libxslt alsa-lib 
+
 because this project not pushed to any public maven repos, you should install it first locally
 
         mvn clean install
