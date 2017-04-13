@@ -56,42 +56,40 @@ object ImageExtractor: BaseExtractor() {
      * @return
      */
     fun findBestImageURL(document: Document, topElement: Element, contextUrl: URL, title: String): String? {
-        var element = topElement
-        var bestImage: String? = null
-        element = filterBadImages(element)
-        val imgElements = element.getElementsByTag("img")
-        val imageCandidates = ArrayList<String>()
-        for (imgElement in imgElements) {
-            var imgUrl = imgElement.attr("src")
-            try {
-                imgUrl = URL(contextUrl, imgUrl).toString()
-            } catch (e: MalformedURLException) {
+        try {
+            var bestImage: String? = null
+            var element = topElement
+            element = filterBadImages(element)
+            val imgElements = element.getElementsByTag("img")
+            val imageCandidates = ArrayList<String>()
+            for (imgElement in imgElements) {
+                var imgUrl = imgElement.attr("src")
+                try {
+                    imgUrl = URL(contextUrl, imgUrl).toString()
+                } catch (e: MalformedURLException) {
 
+                }
+                imgElement.attr("src", imgUrl)
+                imageCandidates.add(imgUrl)
             }
-            imgElement.attr("src", imgUrl)
-            imageCandidates.add(imgUrl)
-        }
 
-        // Setting the best image , in case still you need the top image.
-        if (bestImage == null) {
-            bestImage = getImageAltMatchTitle(document, contextUrl, title)
-        }
-        if (bestImage == null) {
-            bestImage = getImageAfterTitle(document, contextUrl)
-        }
-
-        if ((bestImage.isNullOrEmpty())) {
-            if (imageCandidates.size > 0) {
-                bestImage = imageCandidates[0]
+            // Setting the best image , in case still you need the top image.
+            if (bestImage == null) {
+                bestImage = getImageAltMatchTitle(document, contextUrl, title)
             }
-        } else {
-            if (!imageCandidates.contains(bestImage)) {
-
-            } else {
-
+            if (bestImage == null) {
+                bestImage = getImageAfterTitle(document, contextUrl)
             }
+
+            if ((bestImage.isNullOrEmpty())) {
+                if (imageCandidates.size > 0) {
+                    bestImage = imageCandidates[0]
+                }
+            }
+            return bestImage
+        } catch (e: Exception) {
+            return null
         }
-        return bestImage
     }
 
     /**
@@ -105,11 +103,10 @@ object ImageExtractor: BaseExtractor() {
         if (topNodeImages.size > 0) {
             for (imageElement in topNodeImages) {
                 val imgSrc = imageElement.attr("src")
-                if ((imgSrc.isNullOrEmpty()))
-                    continue
+                if (imgSrc.isNullOrEmpty()) continue
                 badImageMacther.reset(imgSrc)
                 if (badImageMacther.find()) {
-                    imageElement.parent().remove()
+                    imageElement.parent()?.remove()
                 }
             }
         }
