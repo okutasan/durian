@@ -14,14 +14,6 @@ Prerequisites:
 Install
 -
 
-tried in MAC OS machine and work well, on centos machine, please install
-
-yum groupinstall -y "Fonts"
-
-yum install gtk2 
-
-optional : gtkhtml3 libXtst libxslt alsa-lib 
-
 because this project not pushed to any public maven repos, you should install it first locally
 
         mvn clean install
@@ -46,13 +38,23 @@ Usage
         
         val webData = extractor.extract(url)
         
+or 
+        
+        val forceJavascript = false
+        WebData webData = extractor.extract(url, forceJavacript)
 
 ###Java
         
         WebExtractor extractor = WebExtractor.Builder()
                         .strategy(Strategy.HYBRID)
-                        .build()
-        WebData webData = extractor.extract(url)
+                        .build();
+        WebData webData = extractor.extract(url);
+
+or 
+        
+        boolean forceJavascript = false;
+        WebData webData = extractor.extract(url, forceJavacript);
+        
         
 Options
 -
@@ -63,3 +65,11 @@ Options
 - **CONTENT** : prefer using content as source of extraction
 - **HYBRID** : fetch from meta first, if not found search deeper from content
 
+###System Config
+
+tried in MAC OS machine and work well, on centos machine, please install
+
+        yum groupinstall -y "Fonts"
+        yum install gtk2 
+
+> optional : gtkhtml3 libXtst libxslt alsa-lib 
