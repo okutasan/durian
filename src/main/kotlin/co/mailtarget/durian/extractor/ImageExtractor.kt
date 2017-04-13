@@ -23,8 +23,7 @@ object ImageExtractor: BaseExtractor() {
             "|gif$|gif\\?"
     private val JUNK_IMAGE = "d-logo-blue-100x100.png|WSJ_profile_lg.gif|dealbook75.gif|t_wb_75.gif|fivethirtyeight75.gif|current_issue.jpg|thecaucus75.gif"
 
-    private val badImageMacther: Matcher = Pattern.compile(BAD_IMAGE).matcher("");
-    private val junkImageMacther: Matcher = Pattern.compile(JUNK_IMAGE).matcher("");
+    private val badImageMacther: Matcher = Pattern.compile(BAD_IMAGE).matcher("")
 
     @JvmOverloads fun getImage(document: Document, url: URL, title: String, contentElement: Element = document.body()): String? {
         val image = getImageFromMeta(document)
@@ -37,17 +36,11 @@ object ImageExtractor: BaseExtractor() {
     }
 
     fun getImageFromMeta(document: Document): String? {
-        for (image in extractMetas(document, META_IMAGE)) {
-            if(!image.contains(JUNK_IMAGE.toRegex()) && !image.contains(BAD_IMAGE.toRegex())) {
-                return image
-            }
-        }
-        for (image in extractMetas(document, META_IMAGE_LINK, "href")) {
-            if(!image.contains(JUNK_IMAGE.toRegex()) && !image.contains(BAD_IMAGE.toRegex())) {
-                return image
-            }
-        }
-        return null
+        extractMetas(document, META_IMAGE)
+                .filter { !it.contains(JUNK_IMAGE.toRegex()) && !it.contains(BAD_IMAGE.toRegex()) }
+                .forEach { return it }
+        return extractMetas(document, META_IMAGE_LINK, "href")
+                .firstOrNull { !it.contains(JUNK_IMAGE.toRegex()) && !it.contains(BAD_IMAGE.toRegex()) }
     }
 
     /**
