@@ -2,7 +2,7 @@ Durian Extractor
 =
 
 Web page extractor and readability using Jsoup. Enable javascript serverside rendering 
-support using JBrowserDriver (Selenium).
+support using JBrowserDriver (Selenium WebDriver).
 
 Prerequisites:
 -
@@ -45,7 +45,7 @@ or
 
 ###Java
         
-        WebExtractor extractor = WebExtractor.Builder()
+        WebExtractor extractor = new WebExtractor.Builder()
                         .strategy(Strategy.HYBRID)
                         .build();
         WebData webData = extractor.extract(url);
