@@ -41,7 +41,6 @@
         <common.lang3.version>3.5</common.lang3.version>
         <junit.version>4.12</junit.version>
         <jodatime.version>2.9.4</jodatime.version>
-        <nangka.version>0.0.6</nangka.version>
         <jbrowser.version>0.17.7</jbrowser.version>
         <selenium.version>2.53.0</selenium.version>
         <maven.compiler.version>3.5.1</maven.compiler.version>
@@ -69,11 +68,6 @@
             <version>${common.lang3.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.masasdani</groupId>
-            <artifactId>nangka</artifactId>
-            <version>${nangka.version}</version>
-        </dependency>
-        <dependency>
             <groupId>com.machinepublishers</groupId>
             <artifactId>jbrowserdriver</artifactId>
             <version>${jbrowser.version}</version>
@@ -95,7 +89,7 @@
         </dependency>
         <dependency>
             <groupId>org.jetbrains.kotlin</groupId>
-            <artifactId>kotlin-test</artifactId>
+            <artifactId>kotlin-test-junit</artifactId>
             <version>${kotlin.version}</version>
             <scope>test</scope>
         </dependency>

@@ -1,23 +1,20 @@
 package co.mailtarget.durian
 
 import co.mailtarget.durian.extractor.*
-import com.machinepublishers.jbrowserdriver.JBrowserDriver
-import com.machinepublishers.jbrowserdriver.Settings
-import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
 import java.net.URL
-import java.util.logging.Level
 
 /**
  *
  * @author masasdani
  * @since 4/5/17
  */
-class WebExtractor(val driver: JBrowserDriver): Connection()  {
+class WebExtractor: Connection()  {
 
     var cleaner: DocumentCleaner = DocumentCleaner()
     var strategy = Strategy.META
+    var logging = true
 
     /**
      * attemp to extract web data
@@ -25,44 +22,21 @@ class WebExtractor(val driver: JBrowserDriver): Connection()  {
      * @param url
      * @return
      */
-    fun extract(url: String): WebPage {
-        val document = getDocument(url)
-        when (strategy) {
-            Strategy.CONTENT -> return extractContent(url, document)
-            Strategy.HYBRID -> return extractHybrid(url, document)
-            else -> return extractMeta(url, document)
-        }
-    }
-
-    /**
-     * attemp to extract web data
-     *
-     * @param url
-     * @return
-     */
-    fun extract(url: String, html: String): WebPage {
-        val document = Jsoup.parse(html)
-        when (strategy) {
-            Strategy.CONTENT -> return extractContent(url, document)
-            Strategy.HYBRID -> return extractHybrid(url, document)
-            else -> return extractMeta(url, document)
-        }
-    }
-
-
-    /**
-     * attemp to extract web data
-     *
-     * @param url
-     * @return
-     */
-    fun extract(url: String, forceJavascript: Boolean): WebPage {
-        if(forceJavascript) {
+    @JvmOverloads fun extract(url: String, forceJavascript: Boolean = false): WebPage {
+        val document: Document
+        if (forceJavascript) {
+            val driver = getWebDriver(logging)
             driver.get(url)
             val html = driver.pageSource
-            return extract(url, html)
+            document = getDocument(url, html)
+        } else {
+            document = getDocument(url)
         }
-        return extract(url)
+        when (strategy) {
+            Strategy.CONTENT -> return extractContent(url, document)
+            Strategy.HYBRID -> return extractHybrid(url, document)
+            else -> return extractMeta(url, document)
+        }
     }
 
     private fun extractContent(url: String, document: Document): WebPage {
@@ -111,25 +85,9 @@ class WebExtractor(val driver: JBrowserDriver): Connection()  {
 
     object Builder {
 
-        private val MAX_PROCESS = 1000
-        private val CONNECTION_TIMEOUT = 3000
-        private val driverSettingBuilder = Settings.builder()
-                .csrf()
-                .headless(true)
-                .javascript(true)
-                .logJavascript(false)
-                .ignoreDialogs(true)
-                .cache(true)
-                .processes(MAX_PROCESS)
-                .maxConnections(MAX_PROCESS)
-                .connectionReqTimeout(CONNECTION_TIMEOUT)
-                .ajaxResourceTimeout(CONNECTION_TIMEOUT.toLong())
-                .socketTimeout(CONNECTION_TIMEOUT)
-                .connectTimeout(CONNECTION_TIMEOUT)
-                .quickRender(true)
-
         private var strategy = Strategy.META
         private var cleanerOptions: ArrayList<DocumentCleaner.Options> = arrayListOf()
+        private var logging = true
 
         fun strategy(strategy: Strategy): Builder {
             this.strategy = strategy
@@ -141,17 +99,16 @@ class WebExtractor(val driver: JBrowserDriver): Connection()  {
             return this
         }
 
-        fun disableLogging(disableLogging: Boolean): Builder {
-            if(disableLogging) {
-                driverSettingBuilder.loggerLevel(Level.OFF)
-            }
+        fun logging(logging: Boolean): Builder {
+            this.logging = logging
             return this
         }
 
         fun build(): WebExtractor {
-            val extractor = WebExtractor(JBrowserDriver(driverSettingBuilder.build()))
+            val extractor = WebExtractor()
             extractor.strategy = this.strategy
             extractor.cleaner.options.addAll(cleanerOptions)
+            extractor.logging = logging
             return extractor
         }
     }

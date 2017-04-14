@@ -103,7 +103,7 @@ class DocumentFormatter {
 
     /**
      * set favicon of this page
-     * 
+     *
      * @param document document
      * @param faviconUrl faviconUrl
      */

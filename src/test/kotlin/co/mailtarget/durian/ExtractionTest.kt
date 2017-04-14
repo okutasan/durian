@@ -23,7 +23,7 @@ class ExtractionTest {
         val extractor = WebExtractor.Builder
                 .strategy(strategy)
                 .cleanerOptions(options)
-                .disableLogging(false)
+                .logging(true)
                 .build()
         assertNotNull(extractor.cleaner)
         assert(!extractor.cleaner.options.isEmpty())
