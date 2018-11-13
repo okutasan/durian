@@ -195,7 +195,7 @@ constructor(
     private fun cleanDropCaps(document: Document) {
         val items = document.select("span[class~=(dropcap|drop_cap)]")
         for (item in items) {
-            val tn = TextNode(item.text(), document.baseUri())
+            val tn = TextNode(item.text())
             item.replaceWith(tn)
         }
     }
@@ -372,7 +372,7 @@ constructor(
         val span = document.getElementsByTag("span")
         for (item in span) {
             if (item.parent().nodeName() == "p") {
-                val tn = TextNode(item.text(), document.baseUri())
+                val tn = TextNode(item.text())
                 item.replaceWith(tn)
             }
         }
@@ -386,7 +386,7 @@ constructor(
             if (images.size != 0) {
                 continue
             }
-            val tn = TextNode(node.text(), document.baseUri())
+            val tn = TextNode(node.text())
             node.replaceWith(tn)
         }
     }

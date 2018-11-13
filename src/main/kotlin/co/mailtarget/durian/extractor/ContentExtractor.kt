@@ -38,11 +38,11 @@ object ContentExtractor {
      * @return
      */
     fun getContentElement(document: Document): Element {
+        //println(document.text())
         var result = getContentByTitle(document)
         if(result == null) result = getArticleByTag(document)
-        if (result == null) {
-            result = fetchArticleContent(document)
-        }
+        if (result == null) result = getArticleById(document)
+        if (result == null) result = fetchArticleContent(document)
         return result ?: document.body()
     }
 
@@ -64,6 +64,10 @@ object ContentExtractor {
 
     private fun getArticleByTag(document: Document): Element? {
         return document.getElementsByTag("article")?.first()
+    }
+
+    private fun getArticleById(document: Document): Element? {
+        return document.getElementById("articleDescription")
     }
 
     private fun getContentTargets(topElement: Element, document: Document): Elements {
@@ -90,11 +94,12 @@ object ContentExtractor {
         var topNode: Element? = null
         val parentNodes = HashSet<Element>()
         val nodesToCheck = getNodesToCheck(document)
-
         for (element in nodesToCheck) {
+            println("nodetocheck "+element.text())
             if (element.text().length < 25) {
                 continue
             }
+            println("content "+element.text())
             val contentScore = getElementScore(element)
             ScoreInfo.updateContentScore(element.parent(), contentScore)
             ScoreInfo.updateContentScore(element.parent().parent(),
