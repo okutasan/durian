@@ -11,7 +11,7 @@ import kotlin.test.assertNotNull
  */
 class ExtractionTest {
 
-    private val url = "https://blog.mailtarget.co/haruskah-ucapkan-selamat-tinggal-pada-inactive-subscriber/"
+    private val url = "https://blog.mailtarget.co/berbagi-template-email-dan-landing-page-ke-sesama-pengguna-mailtarget/"
 
     @Test
     fun builderTest() {
@@ -54,7 +54,7 @@ class ExtractionTest {
     private fun extractorTest(strategy: WebExtractor.Strategy, options: ArrayList<DocumentCleaner.Options>, forceJs: Boolean) {
         val extractor = buildExtractor(strategy, options)
         val webData = extractor.extract(url, forceJs)
-        assert(!webData.title.isNullOrEmpty())
+        assert(!webData.title.isEmpty())
         println(webData.title)
         assert(!webData.image.isNullOrEmpty())
         println("images: ${webData.image}")

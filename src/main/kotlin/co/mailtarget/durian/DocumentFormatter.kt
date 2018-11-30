@@ -2,7 +2,7 @@ package co.mailtarget.durian
 
 import co.mailtarget.durian.WebPage
 import co.mailtarget.durian.formatter.TemplateLoader
-import org.apache.commons.lang3.StringEscapeUtils
+import org.apache.commons.text.StringEscapeUtils
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element

@@ -16,11 +16,14 @@ open class Connection {
 
     val MAX_PROCESS = 1000
     val CONNECTION_TIMEOUT = 30000
-    private val USER_AGENT = "Mozilla/5.0 (Linux; Android 4.4; Nexus 5 Build/_BuildID_) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/30.0.0.0 Mobile Safari/537.36";
+    private val USER_AGENT = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.157 Safari/537.36";
 
     @JvmOverloads fun getDocument(url: String, timeout: Int = CONNECTION_TIMEOUT): Document {
         try {
-            return Jsoup.connect(url).userAgent(USER_AGENT).timeout(timeout).get()
+            return Jsoup.connect(url)
+                    .userAgent(USER_AGENT)
+                    .timeout(timeout)
+                    .get()
         }catch (e: Exception) {
             throw DurianException(e.message)
         }

@@ -18,6 +18,7 @@ object AddSiblings {
      * @return
      */
     fun addSiblings(node: Element): Element {
+        println("contentNode "+node.text())
         val baselineScoreForSiblingParagraphs = getBaselineScoreForSiblings(node)
         var currentSibling: Element? = node.previousElementSibling()
         while (currentSibling != null) {
