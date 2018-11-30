@@ -22,20 +22,16 @@ class WebExtractor: Connection()  {
      * @param url
      * @return
      */
-    @JvmOverloads fun extract(url: String, forceJavascript: Boolean = false): WebPage {
-        val document: Document
-        if (forceJavascript) {
-            val driver = getWebDriver(logging)
-            driver.get(url)
-            val html = driver.pageSource
-            document = getDocument(url, html)
+    @JvmOverloads fun extract(url: String, html: String): WebPage {
+        val document: Document = if (html.isEmpty()) {
+            getDocument(url, html)
         } else {
-            document = getDocument(url)
+            getDocument(url)
         }
-        when (strategy) {
-            Strategy.CONTENT -> return extractContent(url, document)
-            Strategy.HYBRID -> return extractHybrid(url, document)
-            else -> return extractMeta(url, document)
+        return when (strategy) {
+            Strategy.CONTENT -> extractContent(url, document)
+            Strategy.HYBRID -> extractHybrid(url, document)
+            else -> extractMeta(url, document)
         }
     }
 
