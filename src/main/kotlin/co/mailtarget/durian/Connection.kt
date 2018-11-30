@@ -23,7 +23,6 @@ open class Connection {
             return Jsoup.connect(url)
                     .userAgent(USER_AGENT)
                     .timeout(timeout)
-                    .followRedirects(true)
                     .get()
         }catch (e: Exception) {
             throw DurianException(e.message)
