@@ -23,7 +23,7 @@ class WebExtractor: Connection()  {
      * @return
      */
     @JvmOverloads fun extract(url: String, html: String): WebPage {
-        val document: Document = if (html.isEmpty()) {
+        val document: Document = if (!html.isEmpty()) {
             getDocument(url, html)
         } else {
             getDocument(url)
