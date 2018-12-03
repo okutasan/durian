@@ -1,5 +1,7 @@
 package co.mailtarget.durian
 
+import org.junit.AfterClass
+import org.junit.BeforeClass
 import org.junit.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
@@ -38,7 +40,7 @@ class ExtractionTest {
 
     @Test
     fun javascriptExtractorTest(){
-        extractorTest(WebExtractor.Strategy.HYBRID, arrayListOf(), true)
+        extractorTest(WebExtractor.Strategy.HYBRID, arrayListOf(), false)
     }
 
     @Test
@@ -51,11 +53,11 @@ class ExtractionTest {
         extractorTest(WebExtractor.Strategy.HYBRID, arrayListOf(), false)
     }
 
-    private fun extractorTest(strategy: WebExtractor.Strategy, options: ArrayList<DocumentCleaner.Options>, forceJs: Boolean) {
+    private fun extractorTest(strategy: WebExtractor.Strategy, options: ArrayList<DocumentCleaner.Options>, emptyHtml: Boolean) {
         val extractor = buildExtractor(strategy, options)
-        val webData = extractor.extract(url, forceJs)
-        assert(!webData.title.isEmpty())
-        println(webData.title)
+        val webData = extractor.extract(url, if (emptyHtml) "" else sampleHtml)
+        /*assert(!webData.title.isEmpty())
+        println(webData.title)*/
         assert(!webData.image.isNullOrEmpty())
         println("images: ${webData.image}")
         assert(!webData.favicon.isNullOrEmpty())
@@ -70,10 +72,27 @@ class ExtractionTest {
     @Test
     fun formatterTest() {
         val extractor = buildExtractor(WebExtractor.Strategy.HYBRID, arrayListOf())
-        val webPage = extractor.extract(url)
+        val webPage = extractor.extract(url, sampleHtml)
         val formmattedDocument = DocumentFormatter().format(webPage)
         assert(!formmattedDocument.isNullOrEmpty())
         println(formmattedDocument)
+    }
+
+    companion object Init{
+
+        lateinit var sampleHtml: String
+
+        @JvmStatic
+        @BeforeClass
+        fun beforeAll() {
+            sampleHtml = this::class.java.classLoader.getResource("sample.html").readText()
+        }
+
+        @JvmStatic
+        @AfterClass
+        fun afterAll() {
+
+        }
     }
 
 

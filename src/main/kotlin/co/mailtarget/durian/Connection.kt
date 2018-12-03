@@ -37,23 +37,4 @@ open class Connection {
         }
     }
 
-    fun getWebDriver(logging: Boolean): WebDriver {
-        val settingBuilder = Settings.builder()
-                .csrf()
-                .headless(true)
-                .javascript(true)
-                .logJavascript(false)
-                .ignoreDialogs(true)
-                .cache(true)
-                .processes(MAX_PROCESS)
-                .maxConnections(MAX_PROCESS)
-                .connectionReqTimeout(CONNECTION_TIMEOUT)
-                .ajaxResourceTimeout(CONNECTION_TIMEOUT.toLong())
-                .socketTimeout(CONNECTION_TIMEOUT)
-                .connectTimeout(CONNECTION_TIMEOUT)
-                .quickRender(true)
-                .loggerLevel(if(logging) Level.WARNING else Level.OFF)
-        return JBrowserDriver(settingBuilder.build())
-
-    }
 }
