@@ -4,7 +4,7 @@
 
     <groupId>co.mailtarget</groupId>
     <artifactId>durian</artifactId>
-    <version>0.0.4-SNAPSHOT</version>
+    <version>0.0.3</version>
 
     <name>co.mailtarget.durian</name>
     <description>durian web extractor</description>
@@ -250,7 +250,7 @@
     <parent>
         <groupId>org.sonatype.oss</groupId>
         <artifactId>oss-parent</artifactId>
-        <version>7</version>
+        <version>9</version>
     </parent>
 
 </project>
