@@ -10,8 +10,8 @@ import org.jsoup.nodes.Element
  */
 object SnippetExtractor: BaseExtractor() {
 
-    private val MAX_SNIPPET_LENGHT = 200
-    private val META_DESCRIPTION = "meta[name~=description$],meta[property~=description$]"
+    private const val MAX_SNIPPET_LENGHT = 200
+    private const val META_DESCRIPTION = "meta[name~=description$],meta[property~=description$]"
 
     fun getDescriptionFromMeta(document: Document): String? {
         return extractMeta(document, META_DESCRIPTION)

@@ -10,7 +10,7 @@ import java.util.regex.Pattern
  */
 object AddSiblings {
 
-    val VIDEOS = Pattern.compile("http:\\/\\/(www\\.)?(youtube|vimeo|player\\.vimeo)\\.com")
+    private val VIDEOS: Pattern = Pattern.compile("http://(www\\.)?(youtube|vimeo|player\\.vimeo)\\.com")
 
     /**
      * adds any siblings that may have a decent score to this node

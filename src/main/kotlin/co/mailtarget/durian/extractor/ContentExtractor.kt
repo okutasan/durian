@@ -9,6 +9,7 @@ import java.util.ArrayList
 import java.util.HashSet
 import java.util.LinkedHashMap
 import java.util.regex.Pattern
+import kotlin.math.roundToInt
 
 /**
  *
@@ -34,7 +35,7 @@ object ContentExtractor {
 
 
     /**
-     * @param doc
+     * @param document
      * @return
      */
     fun getContentElement(document: Document): Element {
@@ -135,8 +136,7 @@ object ContentExtractor {
      */
     private fun getElementScore(element: Element): Double {
         var contentScore = 0.0
-        val scoreTags = ScoreTags.getTagName(element.tagName())
-        when (scoreTags) {
+        when (ScoreTags.getTagName(element.tagName())) {
 
             ScoreTags.div -> contentScore += 5.0
             ScoreTags.pre, ScoreTags.td, ScoreTags.blockquote -> contentScore += 3.0
@@ -172,7 +172,7 @@ object ContentExtractor {
         if (NEGATIVE.matcher(e.id()).find())
             weight -= 50.0
 
-        weight += Math.round(e.ownText().length / 100.0 * 10).toInt().toDouble()
+        weight += (e.ownText().length / 100.0 * 10).roundToInt().toDouble()
         weight += weightChildNodes(e).toDouble()
         return weight
     }
@@ -194,7 +194,7 @@ object ContentExtractor {
             if (ownTextLength < 20)
                 continue
             if (ownTextLength > 200)
-                weight += Math.max(50, ownTextLength / 10)
+                weight += 50.coerceAtLeast(ownTextLength / 10)
             if (e.id().contains("caption") || e.className().contains("caption"))
                 weight += 30
             if (child.tagName() == "h1" || child.tagName() == "h2") {
@@ -230,10 +230,7 @@ object ContentExtractor {
      * @return
      */
     private fun calcWeightForChild(child: Element, ownText: String): Int {
-        val `val`: Int
-        val c = 0
-        if (c > 5) `val` = -30
-        else `val` = Math.round(ownText.length / 25.0).toInt()
+        val `val`: Int = (ownText.length / 25.0).roundToInt()
         ScoreInfo.updateContentScore(child, `val`.toDouble())
         return `val`
     }
@@ -246,7 +243,7 @@ object ContentExtractor {
         val nodesToCheck = LinkedHashMap<Element, Any?>(64)
         for (element in doc.select("body").select("*")) {
             if ("p;td;h1;h2;pre".contains(element.tagName())) {
-                nodesToCheck.put(element, null)
+                nodesToCheck[element] = null
             }
         }
         return nodesToCheck.keys
@@ -258,10 +255,10 @@ object ContentExtractor {
 
         companion object {
             fun getTagName(tag: String): ScoreTags {
-                try {
-                    return valueOf(tag)
+                return try {
+                    valueOf(tag)
                 } catch (e: Exception) {
-                    return UNKNOWN
+                    UNKNOWN
                 }
             }
         }

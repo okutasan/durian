@@ -9,11 +9,11 @@ import org.jsoup.nodes.Document
  */
 open class BaseExtractor {
 
-    @JvmOverloads protected fun extractMeta(document: Document, selector: String, attr: String = "content"): String? {
+    protected fun extractMeta(document: Document, selector: String, attr: String = "content"): String? {
         return document.select(selector).attr(attr)
     }
 
-    @JvmOverloads protected fun extractMetas(document: Document, selector: String, attr: String = "content"): List<String> {
+    protected fun extractMetas(document: Document, selector: String, attr: String = "content"): List<String> {
         val datas = ArrayList<String>()
         document.select(selector).mapTo(datas) { it.attr(attr) }
         return datas

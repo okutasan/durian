@@ -20,7 +20,7 @@ object TitleExtractor : BaseExtractor() {
     private val COLON = ":".toRegex()
     private val MOTLEY_REPLACEMENT = arrayOf("&#65533;")
     private val TITLE_REPLACEMENT = arrayOf("&raquo;", "»")
-    private val META_TITLE = "title,meta[property~=title$]"
+    private const val META_TITLE = "title,meta[property~=title$]"
 
     /**
      * find best title from content,
@@ -29,7 +29,7 @@ object TitleExtractor : BaseExtractor() {
      * @param topElement
      * @return
      */
-    @JvmOverloads fun getTitleFromContent(document: Document, topElement: Element = document.body()): String {
+    fun getTitleFromContent(document: Document, topElement: Element = document.body()): String {
         val elements = topElement.getElementsByTag("h1")
         val titleCandidates = elements.map { it.text() }
         return findLargestStringOnCollection(titleCandidates)
@@ -43,9 +43,9 @@ object TitleExtractor : BaseExtractor() {
      * @param topElement
      * @return
      */
-    @JvmOverloads fun getTitle(document: Document, topElement: Element = document.body()): String {
+    fun getTitle(document: Document, topElement: Element = document.body()): String {
         var title = getTitleFromMeta(document)
-        if (title.isNullOrEmpty()) {
+        if (title.isEmpty()) {
             title = getTitleFromContent(document, topElement)
         }
         return title

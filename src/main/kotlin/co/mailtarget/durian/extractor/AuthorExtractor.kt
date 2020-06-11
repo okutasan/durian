@@ -10,7 +10,7 @@ import org.jsoup.nodes.Element
  */
 object AuthorExtractor : BaseExtractor() {
 
-    private val META_PUBLISHER = ""
+    private const val META_PUBLISHER = ""
 
     fun getPublisher(document: Document): String? {
         return extractMeta(document, META_PUBLISHER)

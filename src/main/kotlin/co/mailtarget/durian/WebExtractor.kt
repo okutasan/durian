@@ -22,8 +22,8 @@ class WebExtractor: Connection()  {
      * @param url
      * @return
      */
-    @JvmOverloads fun extract(url: String, html: String): WebPage {
-        val document: Document = if (!html.isEmpty()) {
+    fun extract(url: String, html: String): WebPage {
+        val document: Document = if (html.isNotEmpty()) {
             getDocument(url, html)
         } else {
             getDocument(url)
@@ -43,8 +43,8 @@ class WebExtractor: Connection()  {
         webPage.favicon = FaviconExtractor.getFavicon(document)
         webPage.image = ImageExtractor.getImageFromContent(document, URL(url), webPage.title, contentElement)
         webPage.description = SnippetExtractor.getDescriptionFromContent(document, contentElement)
-        webPage.publishedDate = DateExtractor.getDateFromContent(document, contentElement)
-        webPage.keywords = KeywordExtractor.getKeywordsFromContent(document, contentElement)
+        webPage.publishedDate = DateExtractor.getDate(document)
+        webPage.keywords = KeywordExtractor.getKeywords(document)
         webPage.content = contentElement
         return webPage
     }
@@ -58,7 +58,7 @@ class WebExtractor: Connection()  {
         webPage.image = ImageExtractor.getImage(document, URL(url), webPage.title, contentElement)
         webPage.description = SnippetExtractor.getDescription(document, contentElement)
         webPage.publishedDate = DateExtractor.getDate(document, contentElement)
-        webPage.keywords = KeywordExtractor.getKeywords(document, contentElement)
+        webPage.keywords = KeywordExtractor.getKeywords(document)
         webPage.content = contentElement
         return webPage
     }

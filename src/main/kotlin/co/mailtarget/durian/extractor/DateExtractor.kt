@@ -10,20 +10,20 @@ import org.jsoup.nodes.Element
  */
 object DateExtractor: BaseExtractor() {
 
-    private val META_DATE = "meta[name~=date$],meta[property~=date$],meta[name~=time$],meta[property~=time$]"
+    private const val META_DATE = "meta[name~=date$],meta[property~=date$],meta[name~=time$],meta[property~=time$]"
 
     fun getDateFromMeta(document: Document): String? {
         return extractMeta(document, META_DATE)
     }
 
-    @JvmOverloads fun getDateFromContent(document: Document, contentElement: Element = document.body()): String? {
+    private fun getDateFromContent(document: Document): String? {
         return ""
     }
 
-    @JvmOverloads fun getDate(document: Document, contentElement: Element = document.body()): String? {
+    fun getDate(document: Document, contentElement: Element = document.body()): String? {
         val desc = getDateFromMeta(document)
         if(desc.isNullOrEmpty()) {
-            return getDateFromContent(document, contentElement)
+            return getDateFromContent(document)
         }
         return desc
     }
