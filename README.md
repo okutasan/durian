@@ -1,8 +1,7 @@
 Durian Extractor
 =
 
-Web page extractor and readability using Jsoup. Enable javascript serverside rendering 
-support using JBrowserDriver (Selenium WebDriver).
+Web page extractor and readability using Jsoup. 
 
 Prerequisites:
 -
@@ -23,7 +22,7 @@ add this project as dependency of your project
 	    <dependency>
             <groupId>co.mailtarget</groupId>
             <artifactId>durian</artifactId>
-            <version>0.0.2-SNAPSHOT</version>
+            <version>0.0.3</version>
         </dependency>
 
         
