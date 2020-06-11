@@ -110,22 +110,22 @@ class StopWords {
                     "yaitu", "yang")
 
             val hashSet = HashSet<String>()
-            hashSet.addAll(Arrays.asList(*stopwordEn))
-            hashSet.addAll(Arrays.asList(*stopwordId))
+            hashSet.addAll(listOf(*stopwordEn))
+            hashSet.addAll(listOf(*stopwordId))
 
             STOP_WORDS = Collections.unmodifiableSet(hashSet)
         }
 
         // the confusing pattern below is basically just match any non-word
         // character excluding white-space.
-        val PUNCTUATION = "[^\\p{Ll}\\p{Lu}\\p{Lt}\\p{Lo}\\p{Nd}\\p{Pc}\\s]".toRegex()
+        private val PUNCTUATION = "[^\\p{Ll}\\p{Lu}\\p{Lt}\\p{Lo}\\p{Nd}\\p{Pc}\\s]".toRegex()
 
-        fun removePunctuation(str: String): String {
+        private fun removePunctuation(str: String): String {
             return (str.replace(PUNCTUATION, ""))
         }
 
         fun getStopWordCount(content: String): WordStats {
-            if (content.isNullOrEmpty())
+            if (content.isEmpty())
                 return WordStats.EMPTY
 
             val ws = WordStats()
@@ -137,7 +137,7 @@ class StopWords {
             val stopWords = ArrayList<String>()
             for (i in words.indices) {
                 val word = words[i]
-                if (word.isNullOrEmpty()) continue
+                if (word.isEmpty()) continue
                 val wordLower = word.toLowerCase()
                 if (STOP_WORDS.contains(wordLower)) stopWords.add(wordLower)
             }

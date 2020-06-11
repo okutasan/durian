@@ -15,13 +15,13 @@ import java.util.regex.Pattern
  */
 object ImageExtractor: BaseExtractor() {
 
-    private val META_IMAGE = "meta[property~=image$],meta[name~=image$],meta[name~=Image$]"
-    private val META_IMAGE_LINK = "link[rel~=image_src]"
-    private val BAD_IMAGE = ".html|.ico|/favicon|button|digg.jpg|digg.png|delicious.png|reddit.jpg|doubleclick|diggthis|diggThis|adserver|/ads/|ec.atdmt.com" +
+    private const val META_IMAGE = "meta[property~=image$],meta[name~=image$],meta[name~=Image$]"
+    private const val META_IMAGE_LINK = "link[rel~=image_src]"
+    private const val BAD_IMAGE = ".html|.ico|/favicon|button|digg.jpg|digg.png|delicious.png|reddit.jpg|doubleclick|diggthis|diggThis|adserver|/ads/|ec.atdmt.com" +
             "|mediaplex.com|adsatt|view.atdmt|reuters_fb_share.jpg" +
             "|twitter-login.png|google-plus.png" +
             "|gif$|gif\\?"
-    private val JUNK_IMAGE = "d-logo-blue-100x100.png|WSJ_profile_lg.gif|dealbook75.gif|t_wb_75.gif|fivethirtyeight75.gif|current_issue.jpg|thecaucus75.gif"
+    private const val JUNK_IMAGE = "d-logo-blue-100x100.png|WSJ_profile_lg.gif|dealbook75.gif|t_wb_75.gif|fivethirtyeight75.gif|current_issue.jpg|thecaucus75.gif"
 
     private val badImageMacther: Matcher = Pattern.compile(BAD_IMAGE).matcher("")
 
@@ -48,7 +48,7 @@ object ImageExtractor: BaseExtractor() {
      * @param document
      * @return
      */
-    fun findBestImageURL(document: Document, topElement: Element, contextUrl: URL, title: String): String? {
+    private fun findBestImageURL(document: Document, topElement: Element, contextUrl: URL, title: String): String? {
         try {
             var bestImage: String? = null
             var element = topElement
@@ -111,15 +111,14 @@ object ImageExtractor: BaseExtractor() {
      * @return
      */
     private fun getImageAltMatchTitle(document: Document, contextUrl: URL, title: String): String? {
-        if (!title.isNullOrEmpty()) {
+        if (title.isNotEmpty()) {
             val imgElements = document.body().select("img[alt=$title]")
             if (imgElements.isNotEmpty()) {
                 val imgSrc = imgElements[0].attr("src")
-                try {
-                    val imgUrl = URL(contextUrl, imgSrc).toString()
-                    return imgUrl
+                return try {
+                    URL(contextUrl, imgSrc).toString()
                 } catch (e: MalformedURLException) {
-                    return null
+                    null
                 }
             }
         }
@@ -135,11 +134,10 @@ object ImageExtractor: BaseExtractor() {
             val imgElements = element.parent().getElementsByTag("img")
             for (imgElement in imgElements) {
                 val imgSrc = imgElement.attr("src")
-                try {
-                    val imgUrl = URL(contextUrl, imgSrc).toString()
-                    return imgUrl
+                return try {
+                    URL(contextUrl, imgSrc).toString()
                 } catch (e: MalformedURLException) {
-                    return null
+                    null
                 }
             }
         }

@@ -11,6 +11,7 @@ import kotlin.test.assertNotNull
  * @author masasdani
  * @since 4/6/17
  */
+@Suppress("RECEIVER_NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
 class ExtractionTest {
 
     private val url = "https://blog.mailtarget.co/berbagi-template-email-dan-landing-page-ke-sesama-pengguna-mailtarget/"
@@ -28,7 +29,7 @@ class ExtractionTest {
                 .logging(true)
                 .build()
         assertNotNull(extractor.cleaner)
-        assert(!extractor.cleaner.options.isEmpty())
+        assert(extractor.cleaner.options.isNotEmpty())
         return extractor
     }
 

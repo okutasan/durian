@@ -1,12 +1,9 @@
 package co.mailtarget.durian
 
-import co.mailtarget.durian.WebPage
 import co.mailtarget.durian.formatter.TemplateLoader
 import org.apache.commons.text.StringEscapeUtils
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
-import org.jsoup.nodes.Element
-import org.jsoup.select.Elements
 
 import java.io.InputStream
 
@@ -22,7 +19,7 @@ class DocumentFormatter {
 
     init {
         val classLoader = javaClass.classLoader
-        val inputStream = classLoader.getResourceAsStream(TEMPLATE_FILENAME)
+        val inputStream = classLoader.getResourceAsStream(TEMPLATE_FILENAME) ?: throw NullPointerException()
         htmlTemplate = TemplateLoader.read(inputStream)
     }
 

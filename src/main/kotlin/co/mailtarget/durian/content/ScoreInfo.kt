@@ -10,12 +10,11 @@ object ScoreInfo {
      * @param addToScore
      */
     fun updateContentScore(node: Element, addToScore: Double) {
-        var currentScore: Double
-        try {
-            currentScore = getContentScore(node)
+        val currentScore: Double = try {
+            getContentScore(node)
 
         } catch (e: NumberFormatException) {
-            currentScore = 0.0
+            0.0
         }
         val newScore = currentScore + addToScore
         setContentScore(node, newScore)
@@ -26,7 +25,7 @@ object ScoreInfo {
      * @param el
      * @param score
      */
-    fun setContentScore(el: Element, score: Double) {
+    private fun setContentScore(el: Element, score: Double) {
         el.attr("algoScore", java.lang.Double.toString(score))
 
     }

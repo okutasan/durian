@@ -9,7 +9,7 @@ import org.jsoup.nodes.Document
  */
 object FaviconExtractor : BaseExtractor() {
 
-    private val META_FAVICON = "link[rel~=icon$]"
+    private const val META_FAVICON = "link[rel~=icon$]"
 
     fun getFavicon(document: Document): String? {
         return extractMeta(document, META_FAVICON, "href")

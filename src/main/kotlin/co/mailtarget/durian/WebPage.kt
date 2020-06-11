@@ -15,3 +15,9 @@ data class WebPage constructor(var url: String, var title: String) {
     var publishedDate: String? = null
     var content: Element? = null
 }
+
+data class ProductPage constructor(var url: String, var title: String) {
+    var description: String? = null
+    var price: String? = null
+    var image: String? = null
+}
