@@ -1,6 +1,9 @@
 package co.mailtarget.durian
 
+import co.mailtarget.durian.extractor.ImageExtractor
+import co.mailtarget.durian.extractor.SnippetExtractor
 import co.mailtarget.durian.extractor.TitleExtractor
+import co.mailtarget.durian.extractor.extractMoney
 import org.jsoup.nodes.Document
 
 class ProductExtractor: Connection() {
@@ -18,9 +21,9 @@ class ProductExtractor: Connection() {
         val openGraph = document.openGraphData(url)
         val title = openGraph.title ?: TitleExtractor.getTitle(document, document.body())
         val page = ProductPage(url, title)
-        page.description = openGraph.description
-        page.price = openGraph.productPrice
-        page.image = openGraph.image
+        page.description = openGraph.description ?: SnippetExtractor.getDescriptionFromMeta(document)
+        page.price = openGraph.productPrice ?: document.extractMoney().firstOrNull()
+        page.image = openGraph.image ?: ImageExtractor.getImageFromMeta(document)
         return page
     }
 }
