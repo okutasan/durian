@@ -4,7 +4,7 @@
 
     <groupId>co.mailtarget</groupId>
     <artifactId>durian</artifactId>
-    <version>0.0.8-SNAPSHOT</version>
+    <version>0.0.8</version>
 
     <name>co.mailtarget.durian</name>
     <description>durian web extractor</description>
@@ -21,7 +21,7 @@
         <connection>scm:git:https://github.com/mailtarget/durian</connection>
         <developerConnection>scm:git:https://github.com/mailtarget/durian</developerConnection>
         <url>https://github.com/mailtarget/durian</url>
-        <tag>0.0.7</tag>
+        <tag>0.0.8</tag>
     </scm>
 
     <developers>
@@ -38,6 +38,7 @@
         <jsoup.version>1.13.1</jsoup.version>
         <common.text.version>1.8</common.text.version>
         <junit.version>4.12</junit.version>
+        <dokka.version>0.9.13</dokka.version>
         <maven.compiler.version>3.8.1</maven.compiler.version>
         <maven.assembly.version>3.3.0</maven.assembly.version>
         <maven.source.version>3.2.1</maven.source.version>
@@ -87,6 +88,14 @@
             <url>https://jitpack.io</url>
         </repository>
     </repositories>
+
+    <pluginRepositories>
+        <pluginRepository>
+            <id>jcenter</id>
+            <name>JCenter</name>
+            <url>https://jcenter.bintray.com/</url>
+        </pluginRepository>
+    </pluginRepositories>
 
     <build>
         <resources>
@@ -196,22 +205,33 @@
                     </execution>
                 </executions>
             </plugin>
+
+            <!-- K-doc Plugin -->
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-javadoc-plugin</artifactId>
-                <version>${maven.javadoc.version}</version>
-                <configuration>
-                    <quiet>true</quiet>
-                    <nonavbar>true</nonavbar>
-                    <notree>true</notree>
-                    <nocomment>true</nocomment>
-                    <nohelp>true</nohelp>
-                </configuration>
+                <groupId>org.jetbrains.dokka</groupId>
+                <artifactId>dokka-maven-plugin</artifactId>
+                <version>${dokka.version}</version>
                 <executions>
                     <execution>
-                        <id>attach-javadocs</id>
+                        <phase>package</phase>
                         <goals>
-                            <goal>jar</goal>
+                            <goal>javadocJar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- Gpg Plugin -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-gpg-plugin</artifactId>
+                <version>${maven.gpg.version}</version>
+                <executions>
+                    <execution>
+                        <id>sign-artifacts</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>sign</goal>
                         </goals>
                     </execution>
                 </executions>
@@ -252,5 +272,35 @@
         <artifactId>oss-parent</artifactId>
         <version>9</version>
     </parent>
+
+    <profiles>
+        <profile>
+            <id>release-sign-artifacts</id>
+            <activation>
+                <property>
+                    <name>performRelease</name>
+                    <value>true</value>
+                </property>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                        <version>${maven.gpg.version}</version>
+                        <executions>
+                            <execution>
+                                <id>sign-artifacts</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 
 </project>
