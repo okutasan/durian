@@ -4,7 +4,7 @@
 
     <groupId>co.mailtarget</groupId>
     <artifactId>durian</artifactId>
-    <version>0.0.10</version>
+    <version>0.0.11-SNAPSHOT</version>
 
     <name>co.mailtarget.durian</name>
     <description>durian web extractor</description>
