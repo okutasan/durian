@@ -22,7 +22,7 @@ add this project as dependency of your project
 	    <dependency>
             <groupId>co.mailtarget</groupId>
             <artifactId>durian</artifactId>
-            <version>0.0.3</version>
+            <version>0.0.10</version>
         </dependency>
 
         
