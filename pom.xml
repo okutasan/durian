@@ -4,7 +4,7 @@
 
     <groupId>co.mailtarget</groupId>
     <artifactId>durian</artifactId>
-    <version>0.0.10-SNAPSHOT</version>
+    <version>0.0.10</version>
 
     <name>co.mailtarget.durian</name>
     <description>durian web extractor</description>
@@ -216,6 +216,32 @@
                         <phase>package</phase>
                         <goals>
                             <goal>javadocJar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <sourceDirectories>
+                        <dir>src/main/kotlin</dir>
+                    </sourceDirectories>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>${maven.javadoc.version}</version>
+                <configuration>
+                    <quiet>true</quiet>
+                    <nonavbar>true</nonavbar>
+                    <notree>true</notree>
+                    <nocomment>true</nocomment>
+                    <nohelp>true</nohelp>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>attach-javadocs</id>
+                        <goals>
+                            <goal>jar</goal>
                         </goals>
                     </execution>
                 </executions>
