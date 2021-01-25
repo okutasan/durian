@@ -12,6 +12,7 @@ pipeline {
         sh 'ls -a'
         echo 'Build Durian'
         sh 'mvn clean install -DskipTest -Dgpg.skip'
+        archiveArtifacts '/root/.m2'
       }
     }
 
