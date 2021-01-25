@@ -12,7 +12,7 @@ pipeline {
         sh 'ls -a'
         echo 'Build Durian'
         sh 'mvn clean install -DskipTest -Dgpg.skip'
-        sh 'ls $HOME.m2/'
+        sh 'ls /var/jenkins_home/workspace/durian_ci-jenkins/?/.m2'
       }
     }
 
