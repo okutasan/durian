@@ -25,7 +25,7 @@ pipeline {
   }
   post {
         always {
-            archiveArtifacts artifacts: '$HOME/.m2/', fingerprint: true
+            archiveArtifacts artifacts: '$JENKINS_HOME/?/.m2/', fingerprint: true
         }
     }
 }
