@@ -25,7 +25,7 @@ pipeline {
   }
   post {
         always {
-            archiveArtifacts artifacts: '$JENKINS_HOME?/.m2/repository/co/mailtarget/durian/', fingerprint: true
+            archiveArtifacts artifacts: '?/.m2/repository/co/mailtarget/durian/**/*.jar', fingerprint: true
         }
     }
 }
