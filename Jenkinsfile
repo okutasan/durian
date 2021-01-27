@@ -14,6 +14,8 @@ pipeline {
     stage('Build') {
       steps {
         sh 'ls -a'
+        sh 'ls $HOME'
+        sh 'ls ${HOME}'
         echo 'Build Durian'
         sh 'mvn clean install -DskipTest -Dgpg.skip'
       }
