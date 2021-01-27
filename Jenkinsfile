@@ -2,7 +2,11 @@ pipeline {
   agent {
     docker {
       image 'maven:3-alpine'
-      args '-v "$HOME"/.m2:/root/.m2'
+      args '-v $HOME/tools:$HOME/tools \
+            -v $HOME/.m2/:$HOME/.m2 \
+            -v /etc/passwd:/etc/passwd:ro \
+            -e MAVEN_CONFIG=$HOME/.m2 \
+           '
     }
 
   }
@@ -12,7 +16,6 @@ pipeline {
         sh 'ls -a'
         echo 'Build Durian'
         sh 'mvn clean install -DskipTest -Dgpg.skip'
-        sh 'ls /var/jenkins_home/workspace/durian_ci-jenkins/?/.m2'
       }
     }
 
