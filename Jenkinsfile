@@ -16,7 +16,7 @@ pipeline {
         sh 'ls -a'
         sh 'ls $HOME'
         sh 'ls ${HOME}'
-        sh 'ls $JENKINS_HOME'
+        sh 'ls $JENKINS_HOME/?/.m2/repository/co/mailtarget/durian/'
         echo 'Build Durian'
         sh 'mvn clean install -DskipTest -Dgpg.skip'
       }
@@ -25,7 +25,7 @@ pipeline {
   }
   post {
         always {
-            archiveArtifacts artifacts: '$JENKINS_HOME/?/.m2/', fingerprint: true
+            archiveArtifacts artifacts: '$JENKINS_HOME/?/.m2/repository/co/mailtarget/durian/0.0.1/*.jar', fingerprint: true
         }
     }
 }
