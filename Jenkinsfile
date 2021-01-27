@@ -20,4 +20,9 @@ pipeline {
     }
 
   }
+  post {
+        always {
+            archiveArtifacts artifacts: '$HOME/.m2/', fingerprint: true
+        }
+    }
 }
