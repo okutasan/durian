@@ -16,7 +16,7 @@ pipeline {
         sh 'ls -a'
         sh 'ls $HOME'
         sh 'ls ${HOME}'
-        sh 'ls $JENKINS_HOME/?/.m2/repository/co/mailtarget/durian/'
+        sh 'ls $JENKINS_HOME?/.m2/repository/co/mailtarget/durian/'
         echo 'Build Durian'
         sh 'mvn clean install -DskipTest -Dgpg.skip'
       }
