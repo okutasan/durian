@@ -16,6 +16,7 @@ pipeline {
         sh 'ls -a'
         sh 'ls $HOME'
         sh 'ls ${HOME}'
+        sh 'ls $JENKINS_HOME'
         echo 'Build Durian'
         sh 'mvn clean install -DskipTest -Dgpg.skip'
       }
