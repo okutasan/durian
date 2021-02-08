@@ -17,8 +17,8 @@ pipeline {
   }
   post {
         always {
-            archiveArtifacts artifacts: '.m2/repository/co/mailtarget/durian/**/*.jar', fingerprint: true
-            archiveArtifacts artifacts: '.m2/repository/co/mailtarget/durian/**/*.pom', fingerprint: true
+            archiveArtifacts artifacts: '?/.m2/repository/co/mailtarget/durian/**/*.jar', fingerprint: true
+            archiveArtifacts artifacts: '?/.m2/repository/co/mailtarget/durian/**/*.pom', fingerprint: true
         }
     }
 }
